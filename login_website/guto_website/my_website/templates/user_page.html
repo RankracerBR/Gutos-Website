@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sua página</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href={% static "css/style.css" %}>
+    <h1>Esta é sua página</h1>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {{ form.image.label_tag }}
+        {{ form.image }}
+        
+        {{ form.description.label_tag }}
+        {{ form.description }}
+        
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>

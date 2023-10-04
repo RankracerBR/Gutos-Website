@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gutos Website</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href={% static "css/style.css" %}>
+    <a href="{% url 'send_token'%}">Clique aqui para registrar sua conta</a>
+</head>
+<body>
+    <center>
+    <h1>Login</h1>
+    <form method="post" action="{% url 'index' %}">
+        {% csrf_token %}
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+        
+        <button type="submit">Entrar</button>
+    </form>
+    {% if mensagem_erro %}
+        <p>{{ mensagem_erro }}</p>
+    {% endif %}
+    </center>
+</body>
+</html>

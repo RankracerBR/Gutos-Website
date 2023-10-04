@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href={% static "css/style.css" %}>
+    <center>
+        <h1>Complete seu Cadastro</h1>
+    </center>
+</head>
+<body>
+    <center>
+    <form method="POST" action="POST">
+        {% csrf_token %}
+        <label for="completename">Nome Completo:</label>
+        <input type="text" name="usuario" id="completename" required>
+    
+        <label for="completeemail">Email:</label>
+        <input type="email" name="email" id="completeemail" required>
+    
+        <label for="completepassword">Senha:</label>
+        <input type="password" name="senha" id="completepassword" required>
+    
+        <button type="submit">Registrar</button>
+    </form>
+    {% if mensagem %}
+        <p>{{ mensagem }}</p>
+    {% endif %}
+    </center>
+</body>
+</html>

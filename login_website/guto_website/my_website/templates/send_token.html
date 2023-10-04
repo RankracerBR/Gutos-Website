@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <a href="/">Voltar</a>
+    <meta="UTF-8">
+    <link rel="stylesheet" type="text/css" href={% static "css/style.css" %}>
+    <title>Formulário de Inscrição</title>
+    <center>
+    <h1>Preencha os campos abaixo</h1>
+    </center>
+</head>
+<body>
+    <center>
+    {% block content %}
+    <form action="" method='POST'>
+        {% csrf_token %}
+        {{ form.as_p }} 
+        <input clas="btn btn-primary" type="submit" value="Submit">
+    </form>
+{% endblock %}
+</center>
+</body>
+</html>
