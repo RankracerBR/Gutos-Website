@@ -1,5 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 from .forms import RegistroForm, PerfilUsuarioForm
 from .models import  Registro, CadastroUsuario
 from django.shortcuts import render, redirect
@@ -9,11 +10,26 @@ from django.conf import settings
 import time
 import random
 
+'''Tela de Login'''
+def Login_Usuario(request):
+    if request.method == 'POST':
+        nome = request.POST['nome']
+        email = request.POST['email']
+        senha = request.POST['senha']
 
+        try:
+            CadastroUsuario.objects.get(complete_name=nome, complete_email=email, complete_password=senha)
+        except CadastroUsuario.DoesNotExist:
+            mensagem_erro = "Credenciais incorretas. Tente novamente."
+            return render(request, 'index.html', {'mensagem_erro': mensagem_erro})
+        
+        return redirect('pagina_usuario')
+    
+    return render(request, 'index.html')
 
 '''Página do Usuário'''
-@login_required
 def User_page(request):
+    user_profile = request.user
     try:
         user_profile = CadastroUsuario.objects.get(complete_name=request.user)
     except CadastroUsuario.DoesNotExist:
@@ -23,31 +39,11 @@ def User_page(request):
         form = PerfilUsuarioForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             user_profile = form.save(commit=False)
-            user_profile = form.save(commit=False)
             user_profile.save()
             return redirect('pagina_usuario')
     else:
         form = PerfilUsuarioForm(instance=user_profile)
     return render(request, 'user_page.html', {'form': form})
-
-def Login_Usuario(request):
-    if request.method == 'POST':
-        nome = request.POST['nome']
-        email = request.POST['email']
-        senha = request.POST['senha']
-        
-        # Verificar se o usuário existe no banco de dados
-        try:
-            CadastroUsuario.objects.get(complete_name=nome, complete_email=email, complete_password=senha)
-        except CadastroUsuario.DoesNotExist:
-            # Se o usuário não existir, exibir mensagem de erro
-            mensagem_erro = "Credenciais incorretas. Tente novamente."
-            return render(request, 'index.html', {'mensagem_erro': mensagem_erro})
-        
-        # Se o usuário existir e as credenciais estiverem corretas, redirecionar para 'user_page.html'
-        return redirect('pagina_usuario')
-    
-    return render(request, 'index.html')
 
 
 '''Registro para envio do formulário'''
@@ -75,24 +71,6 @@ def Registration_Token(request):
         
     return render(request, 'send_token.html', {'form': form})
 
-'''Registra o usuário'''
-def CadastroUsuario_1(request):
-    mensagem = 'Usuário já cadastrado'
-    if request.method == "POST":
-        usuario = request.POST.get('usuario')
-        email = request.POST.get('email')
-        senha = request.POST.get('senha')
-
-        usuario_existe = CadastroUsuario.objects.filter(complete_name=usuario, complete_email=email, complete_password=senha)
-
-        if usuario_existe:
-            return render(request, 'register_account.html', {'mensagem':mensagem})
-        else:
-            novo_usuario = CadastroUsuario(complete_name=usuario, complete_email=email, complete_password=senha)
-            time.sleep(5)
-            novo_usuario.save()
-            return render(request, 'sucess.html')
-
 "Redireciona a página quando o usuário clica no token"
 def verify(request, token):
     try:
@@ -102,6 +80,28 @@ def verify(request, token):
         return redirect('index')
     except Exception:
         return render(request, 'register_account.html')
+
+'''Registra o usuário'''
+def CadastroUsuario_1(request):
+    if request.method == 'POST':
+        complete_name = request.POST.get('complete_name')
+        complete_email = request.POST.get('complete_email')
+        complete_password = request.POST.get('complete_password')
+        
+        if CadastroUsuario.objects.filter(complete_email=complete_email).exists():
+            return render(request, 'email_em_uso.html')
+        
+        usuario = CadastroUsuario(
+            complete_name=complete_name,
+            complete_email=complete_email,
+            complete_password=complete_password
+        )
+        
+        usuario.save()
+        
+        return render(request, 'sucess.html')
+    
+    return render(request, 'register_account.html')
 
 
 

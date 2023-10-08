@@ -10,19 +10,19 @@
 </head>
 <body>
     <center>
-    <form method="POST" action="POST">
-        {% csrf_token %}
-        <label for="completename">Nome Completo:</label>
-        <input type="text" name="usuario" id="completename" required>
-    
-        <label for="completeemail">Email:</label>
-        <input type="email" name="email" id="completeemail" required>
-    
-        <label for="completepassword">Senha:</label>
-        <input type="password" name="senha" id="completepassword" required>
-    
-        <button type="submit">Registrar</button>
-    </form>
+        <form method="post" action="{% url 'register_user' %}">
+            {% csrf_token %}
+            <label for="complete_name">Nome completo:</label>
+            <input type="text" name="complete_name" required>
+            <br>
+            <label for="complete_email">E-mail:</label>
+            <input type="email" name="complete_email" required>
+            <br>
+            <label for="complete_password">Senha:</label>
+            <input type="password" name="complete_password" required>
+            <br>
+            <input type="submit" value="Cadastrar">
+        </form>
     {% if mensagem %}
         <p>{{ mensagem }}</p>
     {% endif %}
