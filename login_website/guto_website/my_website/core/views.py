@@ -1,12 +1,13 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from .forms import RegistroForm, PerfilUsuarioForm
 from .models import  Registro, CadastroUsuario
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+from django.contrib import messages
 from django.http import HttpResponse
 from django.conf import settings
+from .forms import RegistroForm
 import time
 import random
 
@@ -18,33 +19,37 @@ def Login_Usuario(request):
         senha = request.POST['senha']
 
         try:
-            CadastroUsuario.objects.get(complete_name=nome, complete_email=email, complete_password=senha)
+            # Autentica o usuário
+            usuario = CadastroUsuario.objects.get(complete_name=nome, complete_email=email, complete_password=senha)
+
+            # Agora você pode acessar as informações do usuário
+            nome = usuario.complete_name
+            imagem = usuario.complete_image
+            descricao = usuario.complete_description
+
+            request.session['nome'] = nome
+            request.session['imagem'] = imagem.url 
+            request.session['descricao'] = descricao
+
+            return redirect('pagina_usuario')
+
         except CadastroUsuario.DoesNotExist:
             mensagem_erro = "Credenciais incorretas. Tente novamente."
-            return render(request, 'index.html', {'mensagem_erro': mensagem_erro})
-        
-        return redirect('pagina_usuario')
-    
+            messages.error(request, mensagem_erro) 
+            return render(request, 'index.html')
+
     return render(request, 'index.html')
 
 '''Página do Usuário'''
-def User_page(request):
-    user_profile = request.user
-    try:
-        user_profile = CadastroUsuario.objects.get(complete_name=request.user)
-    except CadastroUsuario.DoesNotExist:
-        user_profile = None
+def User_Page(request):
+    nome = request.session.get('nome')
+    imagem = request.session.get('imagem')
+    descricao = request.session.get('descricao')
 
-    if request.method == 'POST':
-        form = PerfilUsuarioForm(request.POST, request.FILES, instance=user_profile)
-        if form.is_valid():
-            user_profile = form.save(commit=False)
-            user_profile.save()
-            return redirect('pagina_usuario')
-    else:
-        form = PerfilUsuarioForm(instance=user_profile)
-    return render(request, 'user_page.html', {'form': form})
+    if nome is None or imagem is None or descricao is None:
+        return redirect('index')  
 
+    return render(request, 'user_page.html', {'nome': nome, 'imagem': imagem, 'descricao': descricao})
 
 '''Registro para envio do formulário'''
 def Registration_Token(request):
@@ -83,18 +88,23 @@ def verify(request, token):
 
 '''Registra o usuário'''
 def CadastroUsuario_1(request):
+    message = 'Email já registrado'
     if request.method == 'POST':
         complete_name = request.POST.get('complete_name')
         complete_email = request.POST.get('complete_email')
         complete_password = request.POST.get('complete_password')
+        complete_image = request.FILES.get('complete_image')
+        complete_description = request.POST.get('complete_description')
         
         if CadastroUsuario.objects.filter(complete_email=complete_email).exists():
-            return render(request, 'email_em_uso.html')
+            return render(request, 'register_account.html', {'message':message})
         
         usuario = CadastroUsuario(
             complete_name=complete_name,
             complete_email=complete_email,
-            complete_password=complete_password
+            complete_password=complete_password,
+            complete_image=complete_image,
+            complete_description=complete_description
         )
         
         usuario.save()

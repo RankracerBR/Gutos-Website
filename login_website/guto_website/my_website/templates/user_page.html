@@ -8,16 +8,8 @@
     <h1>Esta é sua página</h1>
 </head>
 <body>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        {{ form.image.label_tag }}
-        {{ form.image }}
-        
-        {{ form.description.label_tag }}
-        {{ form.description }}
-        
-        <button type="submit">Enviar</button>
-    </form>
+    <h1>Bem-vindo, {{ nome }}</h1>
+    <img src="{{ imagem }} " alt="Imagem do usuário">
+    <p>{{ descricao }}</p>
 </body>
 </html>

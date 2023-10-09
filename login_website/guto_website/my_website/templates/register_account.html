@@ -10,7 +10,7 @@
 </head>
 <body>
     <center>
-        <form method="post" action="{% url 'register_user' %}">
+        <form method="post" action="{% url 'register_user' %}" enctype="multipart/form-data"> <!--MUDA PARA COLOCAR FOTO-->
             {% csrf_token %}
             <label for="complete_name">Nome completo:</label>
             <input type="text" name="complete_name" required>
@@ -18,14 +18,22 @@
             <label for="complete_email">E-mail:</label>
             <input type="email" name="complete_email" required>
             <br>
+            <label for="complete_email">Imagem do seu Perfil</label>
+            <input type="file" name="complete_image" accept='image/*' required>
+            <br>
+            <label for="complete_email">Sua descrição:</label>
+            <textarea id="description" name="complete_description" rows="4" cols="50"></textarea>
+            <br>
             <label for="complete_password">Senha:</label>
             <input type="password" name="complete_password" required>
             <br>
             <input type="submit" value="Cadastrar">
         </form>
-    {% if mensagem %}
-        <p>{{ mensagem }}</p>
-    {% endif %}
+        {% if message %}
+        <div class="alert">
+            {{ message }}
+        </div>
+        {% endif %}
     </center>
 </body>
 </html>
