@@ -1,6 +1,5 @@
 from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
 from .models import  Registro, CadastroUsuario
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
@@ -10,6 +9,7 @@ from django.conf import settings
 from .forms import RegistroForm
 import time
 import random
+import os
 
 '''Tela de Login'''
 def Login_Usuario(request):
@@ -40,6 +40,11 @@ def Login_Usuario(request):
 
     return render(request, 'index.html')
 
+'''Tela de Logout'''
+def Logout_Usuario(request):
+    logout(request)
+    return redirect('index')
+
 '''Página do Usuário'''
 def User_Page(request):
     nome = request.session.get('nome')
@@ -50,6 +55,30 @@ def User_Page(request):
         return redirect('index')  
 
     return render(request, 'user_page.html', {'nome': nome, 'imagem': imagem, 'descricao': descricao})
+
+def Atualizar_Usuario(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        descricao = request.POST.get('descricao')
+        imagem = request.FILES.get('imagem')
+
+        usuario = CadastroUsuario.objects.get(complete_email=request.user.email)
+        usuario.complete_name = nome
+        usuario.complete_description = descricao
+        if imagem:
+            usuario.complete_image = imagem
+        usuario.save()
+
+        request.session['nome'] = usuario.complete_name
+        request.session['descricao'] = usuario.complete_description
+        if usuario.complete_image:
+            request.session['imagem'] = usuario.complete_image.url
+        else:
+            request.session['imagem'] = None
+
+        messages.success(request, 'Perfil atualizado com sucesso!')
+
+        return redirect('pagina_usuario')
 
 '''Registro para envio do formulário'''
 def Registration_Token(request):

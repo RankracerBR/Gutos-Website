@@ -4,12 +4,31 @@
 <head>
     <title>Sua página</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href={% static "css/style.css" %}>
+    <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
     <h1>Esta é sua página</h1>
+    <a href="{% url 'logout' %}">Sair</a>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>Bem-vindo, {{ nome }}</h1>
-    <img src="{{ imagem }} " alt="Imagem do usuário">
-    <p>{{ descricao }}</p>
+    <center>
+        {% csrf_token %}
+        <h1>Bem-vindo, {{ nome }}</h1>
+        <a href="#" id="edit-name">✎ Editar </a>
+        <span id="nome-value">{{ nome }}</span>
+        <img src="{{ imagem }}" alt="Imagem do usuário">
+        <p id="descricao">{{ descricao }}</p>
+    </center>
+    <button id="mostrarOpcoes">Mostrar Opções de Alteração</button>
+    <div id="opcoesAlteracao" style="display: none;">
+    <form id="atualizar-form" method="post" action="{% url 'Atualizar_Usuario' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" name="nome" value="{{ nome }}">
+        <textarea name="descricao">{{ descricao }}</textarea>
+        <input type="file" name="imagem">
+        <input type="submit" value="Atualizar Dados">
+    </form>
+    </div>
+    <div id="mensagem"></div>
+    <script src="{% static 'js/alter_info.js' %}"></script>
 </body>
 </html>
