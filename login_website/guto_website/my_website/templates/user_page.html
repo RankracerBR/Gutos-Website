@@ -13,9 +13,7 @@
     <center>
         {% csrf_token %}
         <h1>Bem-vindo, {{ nome }}</h1>
-        <a href="#" id="edit-name">✎ Editar </a>
-        <span id="nome-value">{{ nome }}</span>
-        <img src="{{ imagem }}" alt="Imagem do usuário">
+        <img src="{{ imagem }}" alt="Imagem do usuário" width="200px" height="200px">
         <p id="descricao">{{ descricao }}</p>
     </center>
     <button id="mostrarOpcoes">Mostrar Opções de Alteração</button>

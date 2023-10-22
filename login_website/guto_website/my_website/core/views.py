@@ -1,4 +1,5 @@
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .models import  Registro, CadastroUsuario
 from django.shortcuts import render, redirect
@@ -56,6 +57,7 @@ def User_Page(request):
 
     return render(request, 'user_page.html', {'nome': nome, 'imagem': imagem, 'descricao': descricao})
 
+@login_required
 def Atualizar_Usuario(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
@@ -141,6 +143,5 @@ def CadastroUsuario_1(request):
         return render(request, 'sucess.html')
     
     return render(request, 'register_account.html')
-
 
 
