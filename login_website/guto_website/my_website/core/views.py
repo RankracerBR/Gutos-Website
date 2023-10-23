@@ -1,11 +1,11 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
-from .models import  Registro, CadastroUsuario
+from .models import  Registro, CadastroUsuario, CadastroUsuarioHistorico
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
-from django.contrib import messages
+from django.contrib.auth import logout
 from django.http import HttpResponse
+from django.contrib import messages
 from django.conf import settings
 from .forms import RegistroForm
 import time
@@ -65,6 +65,13 @@ def Atualizar_Usuario(request):
         imagem = request.FILES.get('imagem')
 
         usuario = CadastroUsuario.objects.get(complete_email=request.user.email)
+        
+        CadastroUsuarioHistorico.objects.create(
+            usuario=usuario,
+            nome_anterior = usuario.complete_name,
+            descricao_anterior=usuario.complete_description
+        )
+        
         usuario.complete_name = nome
         usuario.complete_description = descricao
         if imagem:

@@ -5,8 +5,15 @@ import sqlite3
 conn = sqlite3.connect('login_website/guto_website/my_website/db.sqlite3')
 
 # Execute uma consulta SQL para extrair os dados que você deseja converter em CSV
-# Substitua 'sua_tabela' pelo nome da tabela que deseja converter
-query = "SELECT complete_email,complete_description,registration_date FROM CadastroUsuario"
+query = """
+SELECT
+    h.nome_anterior,
+    h.descricao_anterior,
+    h.data_atualizacao,
+    u.complete_email as email_do_usuario
+FROM CadastroUsuarioHistorico h
+JOIN CadastroUsuario u ON h.usuario_id = u.id
+"""
 
 # Use o Pandas para ler os dados do SQLite em um DataFrame
 df = pd.read_sql_query(query, conn)
