@@ -8,8 +8,8 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.conf import settings
 from .forms import RegistroForm
-import time
 import random
+import subprocess
 import os
 
 '''Tela de Login'''
@@ -57,6 +57,7 @@ def User_Page(request):
 
     return render(request, 'user_page.html', {'nome': nome, 'imagem': imagem, 'descricao': descricao})
 
+'''Atualiza o Perfil do Usuário'''
 @login_required
 def Atualizar_Usuario(request):
     if request.method == 'POST':
@@ -65,13 +66,13 @@ def Atualizar_Usuario(request):
         imagem = request.FILES.get('imagem')
 
         usuario = CadastroUsuario.objects.get(complete_email=request.user.email)
-        
+
         CadastroUsuarioHistorico.objects.create(
             usuario=usuario,
-            nome_anterior = usuario.complete_name,
+            nome_anterior=usuario.complete_name,
             descricao_anterior=usuario.complete_description
         )
-        
+
         usuario.complete_name = nome
         usuario.complete_description = descricao
         if imagem:
@@ -85,7 +86,21 @@ def Atualizar_Usuario(request):
         else:
             request.session['imagem'] = None
 
-        messages.success(request, 'Perfil atualizado com sucesso!')
+        # Caminho para os scripts Python que você deseja executar
+        script1_path = '/login_website/guto_website/my_website/core/ML_Training/identify_cols.py'
+        script2_path = '/login_website/guto_website/my_website/core/ML_Training/identify_badwords.py'
+
+        # Executar o primeiro script Python
+        try:
+            subprocess.run(['python', script1_path], check=True)
+        except subprocess.CalledProcessError as e:
+            pass
+
+        # Executar o segundo script Python
+        try:
+            subprocess.run(['python', script2_path], check=True)
+        except subprocess.CalledProcessError as e:
+            pass
 
         return redirect('pagina_usuario')
 
