@@ -3,7 +3,6 @@ from email.mime.text import MIMEText
 import pandas as pd
 import smtplib
 
-
 #A partir da identificação das palavras, fazer script para mandar ao email do usuário correspondente avisando sobre os palavrões e criar um sistema para bani-lo
 #Depois fazer um script para que isso seja automatico, através da lib os ou subprocess
 
@@ -23,8 +22,8 @@ def enviar_email_aviso(destinatario, assunto, mensagem):
     smtp_port = 587
 
     # Substitua pelo seu endereço de e-mail e senha
-    remetente = ""
-    senha = ""
+    remetente = "rankracerbr21@gmail.com"
+    senha = "cplntqrulizcuvzj"
 
     # Crie um objeto SMTP
     server = smtplib.SMTP(smtp_server, smtp_port)
@@ -50,13 +49,13 @@ def enviar_email_aviso(destinatario, assunto, mensagem):
     # Encerre a conexão com o servidor
     server.quit()
 
-df = pd.read_csv('login_website/guto_website/my_website/dados_usuarios.csv')
+df = pd.read_csv('dados_usuarios.csv')
 
 marked_phrases = ['Caralho','krl','Porra','BCT','Buceta','Olá Mundo!','pqp','Cacete','putaquepariu','puta que pariu']
 
 df['marked_words'] = df['descricao_anterior'].apply(identify_marked_phrases)
 
-df.to_csv('login_website/guto_website/my_website/dados_usuarios_com_palavras_alvo.csv', index=False)
+df.to_csv('dados_usuarios_com_palavras_alvo.csv', index=False)
 
 total_palavras_ofensivas = df['marked_words'].sum()
 

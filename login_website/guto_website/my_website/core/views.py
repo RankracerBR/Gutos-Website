@@ -8,9 +8,8 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.conf import settings
 from .forms import RegistroForm
-import random
 import subprocess
-import os
+import random
 
 '''Tela de Login'''
 def Login_Usuario(request):
@@ -57,6 +56,11 @@ def User_Page(request):
 
     return render(request, 'user_page.html', {'nome': nome, 'imagem': imagem, 'descricao': descricao})
 
+'''Executa os arquivos de verificação de palavras'''
+def execute_verification(file_name1,file_name2): #Posteriormente quando rodar no 
+    subprocess.run(f"python {file_name1}")       #ambiente docker fazer com que essa função identifique o sistema ubuntu e rode em "python3"
+    subprocess.run(f"python {file_name2}")
+
 '''Atualiza o Perfil do Usuário'''
 @login_required
 def Atualizar_Usuario(request):
@@ -86,22 +90,11 @@ def Atualizar_Usuario(request):
         else:
             request.session['imagem'] = None
 
-        # Caminho para os scripts Python que você deseja executar
-        script1_path = '/login_website/guto_website/my_website/core/ML_Training/identify_cols.py'
-        script2_path = '/login_website/guto_website/my_website/core/ML_Training/identify_badwords.py'
+        file_name1 = 'ML_Training/identify_cols.py'
+        file_name2 = 'ML_Training/identify_badwords.py'
 
-        # Executar o primeiro script Python
-        try:
-            subprocess.run(['python', script1_path], check=True)
-        except subprocess.CalledProcessError as e:
-            pass
-
-        # Executar o segundo script Python
-        try:
-            subprocess.run(['python', script2_path], check=True)
-        except subprocess.CalledProcessError as e:
-            pass
-
+        execute_verification(file_name1,file_name2)
+    
         return redirect('pagina_usuario')
 
 '''Registro para envio do formulário'''

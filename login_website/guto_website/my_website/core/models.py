@@ -40,3 +40,6 @@ class CadastroUsuarioHistorico(models.Model):
 
     def __str__(self):
         return f"{self.usuario.complete_name} - {self.usuario.complete_email} - {self.data_atualizacao}"
+    
+
+#Criar conta de banimento
