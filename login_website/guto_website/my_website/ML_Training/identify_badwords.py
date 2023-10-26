@@ -7,7 +7,11 @@ import smtplib
 #Depois fazer um script para que isso seja automatico, através da lib os ou subprocess
 
 total_palavras_ofensivas = 0
-limite_palavras_ofensivas = 1
+limite_palavras_ofensivas = 2
+
+#colocar verificação para nomes
+total_nomes_ofensivas = 0
+limite_nome_ofensivo = 2
 
 def identify_marked_phrases(text):
     count = 0
@@ -49,13 +53,13 @@ def enviar_email_aviso(destinatario, assunto, mensagem):
     # Encerre a conexão com o servidor
     server.quit()
 
-df = pd.read_csv('dados_usuarios.csv')
+df = pd.read_csv('ML_Training/Users_csv/dados_usuarios.csv')
 
-marked_phrases = ['Caralho','krl','Porra','BCT','Buceta','Olá Mundo!','pqp','Cacete','putaquepariu','puta que pariu']
+marked_phrases = ['Caralho','krl','Porra','BCT','Buceta','Olá Mundo!','pqp','Cacete','putaquepariu','puta que pariu','porra','kct','meu pau']
 
 df['marked_words'] = df['descricao_anterior'].apply(identify_marked_phrases)
 
-df.to_csv('dados_usuarios_com_palavras_alvo.csv', index=False)
+df.to_csv('ML_Training/Users_csv/dados_usuarios_com_palavras_alvo.csv', index=False)
 
 total_palavras_ofensivas = df['marked_words'].sum()
 

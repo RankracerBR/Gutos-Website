@@ -2,7 +2,7 @@ import pandas as pd
 import sqlite3
 
 # Conecte-se ao arquivo SQLite
-conn = sqlite3.connect('my_website/db.sqlite3')
+conn = sqlite3.connect('db.sqlite3')
 
 # Execute uma consulta SQL para extrair os dados que você deseja converter em CSV
 query = """
@@ -22,5 +22,4 @@ df = pd.read_sql_query(query, conn)
 conn.close()
 
 # Salve o DataFrame como um arquivo CSV
-df.to_csv('login_website/guto_website/my_website/dados_usuarios.csv', index=False)
-
+df.to_csv('ML_Training/Users_csv/dados_usuarios.csv', index=False)

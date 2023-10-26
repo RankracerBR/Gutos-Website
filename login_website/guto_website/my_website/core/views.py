@@ -10,6 +10,7 @@ from django.conf import settings
 from .forms import RegistroForm
 import subprocess
 import random
+import sys
 
 '''Tela de Login'''
 def Login_Usuario(request):
@@ -57,10 +58,10 @@ def User_Page(request):
     return render(request, 'user_page.html', {'nome': nome, 'imagem': imagem, 'descricao': descricao})
 
 '''Executa os arquivos de verificação de palavras'''
-def execute_verification(file_name1,file_name2): #Posteriormente quando rodar no 
-    subprocess.run(f"python {file_name1}")       #ambiente docker fazer com que essa função identifique o sistema ubuntu e rode em "python3"
-    subprocess.run(f"python {file_name2}")
-
+def execute_verification(file_name1, file_name2):
+    subprocess.run(['python', file_name1])
+    subprocess.run(['python', file_name2])
+    
 '''Atualiza o Perfil do Usuário'''
 @login_required
 def Atualizar_Usuario(request):
