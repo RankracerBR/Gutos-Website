@@ -43,3 +43,5 @@ class CadastroUsuarioHistorico(models.Model):
     
 
 #Criar conta de banimento
+class Banned:
+    pass

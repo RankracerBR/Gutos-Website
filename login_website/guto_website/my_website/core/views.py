@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.conf import settings
 from .forms import RegistroForm
 import subprocess
+import platform
 import random
 import sys
 
@@ -59,8 +60,18 @@ def User_Page(request):
 
 '''Executa os arquivos de verificação de palavras'''
 def execute_verification(file_name1, file_name2):
-    subprocess.run(['python', file_name1])
-    subprocess.run(['python', file_name2])
+    if platform.system() == "Windows":
+        # Se o sistema operacional for Windows
+        subprocess.run(['python', file_name1])
+        subprocess.run(['python', file_name2])
+    elif platform.system() == "Linux":
+        # Se o sistema operacional for Linux
+        subprocess.run(['python3', file_name1])
+        subprocess.run(['python3', file_name2])
+    else:
+        print("Sistema operacional não suportado")
+    
+    #Chamar arquivo identify_imgs.py
     
 '''Atualiza o Perfil do Usuário'''
 @login_required

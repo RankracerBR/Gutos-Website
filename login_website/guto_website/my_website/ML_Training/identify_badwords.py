@@ -3,16 +3,14 @@ from email.mime.text import MIMEText
 import pandas as pd
 import smtplib
 
-#A partir da identificação das palavras, fazer script para mandar ao email do usuário correspondente avisando sobre os palavrões e criar um sistema para bani-lo
-#Depois fazer um script para que isso seja automatico, através da lib os ou subprocess
-
+#Critérios
 total_palavras_ofensivas = 0
 limite_palavras_ofensivas = 2
 
-#colocar verificação para nomes
-total_nomes_ofensivas = 0
-limite_nome_ofensivo = 2
+total_nomes_ofensivos = 0
+limite_nomes_ofensivos = 2
 
+#Verificador
 def identify_marked_phrases(text):
     count = 0
     for phrase in marked_phrases:
@@ -53,24 +51,30 @@ def enviar_email_aviso(destinatario, assunto, mensagem):
     # Encerre a conexão com o servidor
     server.quit()
 
+#Lê o arquivo
 df = pd.read_csv('ML_Training/Users_csv/dados_usuarios.csv')
 
+#Palavras proibidas
 marked_phrases = ['Caralho','krl','Porra','BCT','Buceta','Olá Mundo!','pqp','Cacete','putaquepariu','puta que pariu','porra','kct','meu pau']
 
+#Verifica Nome e Descrição anterior
 df['marked_words'] = df['descricao_anterior'].apply(identify_marked_phrases)
+df['marked_names'] = df['nome_anterior'].apply(identify_marked_phrases)
 
+#Converte para .csv os dados
 df.to_csv('ML_Training/Users_csv/dados_usuarios_com_palavras_alvo.csv', index=False)
 
+#Faz a soma das palavras
 total_palavras_ofensivas = df['marked_words'].sum()
+total_nomes_ofensivos = df['marked_names'].sum()
 
-# Itere sobre os usuários e envie e-mails de aviso se excederem o limite de palavras ofensivas
-for index, row in df.iterrows(): #fazer somatório por coluna
-    if row['marked_words'] >= limite_palavras_ofensivas:
+#Analisa se o somatório das colunas é maior que o limite e então manda o email caso ultrapasse
+for index, row in df.iterrows():
+    if row['marked_words'] >= limite_palavras_ofensivas or row['marked_names'] >= limite_nomes_ofensivos:
         destinatario = row['email_do_usuario']
         assunto = "Aviso: Conteúdo ofensivo detectado"
         mensagem = f"Prezado usuário,\n\nDetectamos palavras ofensivas em seu texto. Por favor, reveja e edite o conteúdo.\n\nAtenciosamente,\nEquipe do Guto."
         enviar_email_aviso(destinatario, assunto, mensagem)
 
-# Exiba o total de palavras ofensivas
-total_palavras_ofensivas = df['marked_words'].sum()
+
 print(f"Total de palavras ofensivas: {total_palavras_ofensivas}")
