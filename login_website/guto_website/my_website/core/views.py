@@ -1,6 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
-from .models import  Registro, CadastroUsuario, CadastroUsuarioHistorico
+from .models import  Registro, CadastroUsuario, CadastroUsuarioHistorico, Banimento
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.contrib.auth import logout
@@ -23,17 +23,20 @@ def Login_Usuario(request):
         try:
             # Autentica o usuário
             usuario = CadastroUsuario.objects.get(complete_name=nome, complete_email=email, complete_password=senha)
+            try:
+                banimento = Banimento.objects.get(usuario=usuario)
+                mensagem_banimento = "Sua conta foi banida por razões específicas"
+                return render(request, 'index.html', {'mensagem_banimento':mensagem_banimento})
+            except Banimento.DoesNotExist:
+                nome = usuario.complete_name
+                imagem = usuario.complete_image
+                descricao = usuario.complete_description
 
-            # Agora você pode acessar as informações do usuário
-            nome = usuario.complete_name
-            imagem = usuario.complete_image
-            descricao = usuario.complete_description
+                request.session['nome'] = nome
+                request.session['imagem'] = imagem.url 
+                request.session['descricao'] = descricao
 
-            request.session['nome'] = nome
-            request.session['imagem'] = imagem.url 
-            request.session['descricao'] = descricao
-
-            return redirect('pagina_usuario')
+                return redirect('pagina_usuario')
 
         except CadastroUsuario.DoesNotExist:
             mensagem_erro = "Credenciais incorretas. Tente novamente."

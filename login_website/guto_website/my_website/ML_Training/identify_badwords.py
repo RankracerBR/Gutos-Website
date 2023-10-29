@@ -1,4 +1,5 @@
 from email.mime.multipart import MIMEMultipart
+from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 import pandas as pd
 import smtplib
@@ -55,11 +56,13 @@ def enviar_email_aviso(destinatario, assunto, mensagem):
 df = pd.read_csv('ML_Training/Users_csv/dados_usuarios.csv')
 
 #Palavras proibidas
-marked_phrases = ['Caralho','krl','Porra','BCT','Buceta','Olá Mundo!','pqp','Cacete','putaquepariu','puta que pariu','porra','kct','meu pau']
+marked_phrases = ['Caralho','krl','Porra','BCT','Buceta','pqp','Cacete','putaquepariu','puta que pariu','porra','kct','meu pau']
 
 #Verifica Nome e Descrição anterior
 df['marked_words'] = df['descricao_anterior'].apply(identify_marked_phrases)
 df['marked_names'] = df['nome_anterior'].apply(identify_marked_phrases)
+
+df['data_aviso'] = None
 
 #Converte para .csv os dados
 df.to_csv('ML_Training/Users_csv/dados_usuarios_com_palavras_alvo.csv', index=False)
@@ -73,8 +76,18 @@ for index, row in df.iterrows():
     if row['marked_words'] >= limite_palavras_ofensivas or row['marked_names'] >= limite_nomes_ofensivos:
         destinatario = row['email_do_usuario']
         assunto = "Aviso: Conteúdo ofensivo detectado"
-        mensagem = f"Prezado usuário,\n\nDetectamos palavras ofensivas em seu texto. Por favor, reveja e edite o conteúdo.\n\nAtenciosamente,\nEquipe do Guto."
-        enviar_email_aviso(destinatario, assunto, mensagem)
+        if row['data_aviso'] is None:
+            row['data_aviso'] = datetime.now()
+            mensagem = f"Prezado usuário,\n\nDetectamos palavras ofensivas em seu texto. Por favor, reveja e edite o conteúdo.\n\nAtenciosamente,\nEquipe do Guto."
+            enviar_email_aviso(destinatario, assunto, mensagem)
 
+        else:
+            data_aviso = row['data_aviso']
+            tempo_decorrido = datatime.now() - data_aviso
+            if tempo_decorrido >= timedelta(hours=24):
+                banimento = Banimento()
+                banimento.usuario = row['email_do_usuario']
+                banimento.motivo = "Não alteração após aviso de conteúdo ofensivo"
+                banimento.save()
 
 print(f"Total de palavras ofensivas: {total_palavras_ofensivas}")

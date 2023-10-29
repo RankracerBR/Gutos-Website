@@ -1,25 +1,31 @@
-nome_anterior,descricao_anterior,data_atualizacao,email_do_usuario,marked_words,marked_names
-Augusto Pontes,PQP,2023-10-26 01:31:02.073862,augustopontes010@gmail.com,1,0
-Augusto Pontesss,BCT,2023-10-26 01:31:53.752372,augustopontes010@gmail.com,1,0
-Augusto Pontess,BCT,2023-10-26 01:33:48.584208,augustopontes010@gmail.com,1,0
-Augusto Pontesssssss,BCT,2023-10-26 01:34:31.068890,augustopontes010@gmail.com,1,0
-Augusto Pontesssssss,BCTTT,2023-10-26 01:35:07.725947,augustopontes010@gmail.com,1,0
-Augusto Pontessss,BCTTTT,2023-10-26 01:36:30.910442,augustopontes010@gmail.com,1,0
-Augusto Pontess,BCTT,2023-10-26 01:38:09.394112,augustopontes010@gmail.com,1,0
-Augusto Pontesss,BCTTY,2023-10-26 01:38:46.684706,augustopontes010@gmail.com,1,0
-Augusto Pontes,BCT,2023-10-26 01:39:30.817641,augustopontes010@gmail.com,1,0
-Augusto Pontesss,Porra,2023-10-26 01:40:03.655446,augustopontes010@gmail.com,2,0
-Augusto Pontesssss,Cacete,2023-10-26 01:41:09.941575,augustopontes010@gmail.com,1,0
-Augusto Pontes,kct,2023-10-26 01:43:15.850008,augustopontes010@gmail.com,1,0
-Augusto Pontess,Porra,2023-10-26 01:45:20.059064,augustopontes010@gmail.com,2,0
-Augusto Pontess,BCT,2023-10-26 01:46:18.097437,augustopontes010@gmail.com,1,0
-Augusto Pontesss,Porra,2023-10-26 01:46:57.089844,augustopontes010@gmail.com,2,0
-Augusto Pontess,BCT,2023-10-26 01:48:41.123403,augustopontes010@gmail.com,1,0
-Augusto Pontesss,Porra,2023-10-27 23:56:17.443997,augustopontes010@gmail.com,2,0
-Augusto Pontesss,Porra,2023-10-28 00:46:38.534779,augustopontes010@gmail.com,2,0
-Cacete,Porra,2023-10-28 02:03:11.909725,augustopontes010@gmail.com,2,1
-pqp,Porra,2023-10-28 02:03:55.631535,augustopontes010@gmail.com,2,1
-pqp,Porra,2023-10-28 02:05:54.066562,augustopontes010@gmail.com,2,1
-Cacete,Porra,2023-10-28 02:06:22.969353,augustopontes010@gmail.com,2,1
-Porra,Porra,2023-10-28 02:07:43.214455,augustopontes010@gmail.com,2,2
-krl,Porra,2023-10-28 02:09:32.542896,augustopontes010@gmail.com,2,1
+nome_anterior,descricao_anterior,data_atualizacao,email_do_usuario,marked_words,marked_names,data_aviso
+Augusto Pontes,PQP,2023-10-26 01:31:02.073862,augustopontes010@gmail.com,1,0,
+Augusto Pontesss,BCT,2023-10-26 01:31:53.752372,augustopontes010@gmail.com,1,0,
+Augusto Pontess,BCT,2023-10-26 01:33:48.584208,augustopontes010@gmail.com,1,0,
+Augusto Pontesssssss,BCT,2023-10-26 01:34:31.068890,augustopontes010@gmail.com,1,0,
+Augusto Pontesssssss,BCTTT,2023-10-26 01:35:07.725947,augustopontes010@gmail.com,1,0,
+Augusto Pontessss,BCTTTT,2023-10-26 01:36:30.910442,augustopontes010@gmail.com,1,0,
+Augusto Pontess,BCTT,2023-10-26 01:38:09.394112,augustopontes010@gmail.com,1,0,
+Augusto Pontesss,BCTTY,2023-10-26 01:38:46.684706,augustopontes010@gmail.com,1,0,
+Augusto Pontes,BCT,2023-10-26 01:39:30.817641,augustopontes010@gmail.com,1,0,
+Augusto Pontesss,Porra,2023-10-26 01:40:03.655446,augustopontes010@gmail.com,2,0,
+Augusto Pontesssss,Cacete,2023-10-26 01:41:09.941575,augustopontes010@gmail.com,1,0,
+Augusto Pontes,kct,2023-10-26 01:43:15.850008,augustopontes010@gmail.com,1,0,
+Augusto Pontess,Porra,2023-10-26 01:45:20.059064,augustopontes010@gmail.com,2,0,
+Augusto Pontess,BCT,2023-10-26 01:46:18.097437,augustopontes010@gmail.com,1,0,
+Augusto Pontesss,Porra,2023-10-26 01:46:57.089844,augustopontes010@gmail.com,2,0,
+Augusto Pontess,BCT,2023-10-26 01:48:41.123403,augustopontes010@gmail.com,1,0,
+Augusto Pontesss,Porra,2023-10-27 23:56:17.443997,augustopontes010@gmail.com,2,0,
+Augusto Pontesss,Porra,2023-10-28 00:46:38.534779,augustopontes010@gmail.com,2,0,
+Cacete,Porra,2023-10-28 02:03:11.909725,augustopontes010@gmail.com,2,1,
+pqp,Porra,2023-10-28 02:03:55.631535,augustopontes010@gmail.com,2,1,
+pqp,Porra,2023-10-28 02:05:54.066562,augustopontes010@gmail.com,2,1,
+Cacete,Porra,2023-10-28 02:06:22.969353,augustopontes010@gmail.com,2,1,
+Porra,Porra,2023-10-28 02:07:43.214455,augustopontes010@gmail.com,2,2,
+krl,Porra,2023-10-28 02:09:32.542896,augustopontes010@gmail.com,2,1,
+Augusto Pontes,Porra,2023-10-28 04:53:44.643266,augustopontes010@gmail.com,2,0,
+Porra,Cacete,2023-10-28 04:54:26.693442,augustopontes010@gmail.com,1,2,
+Porra,krl,2023-10-28 04:57:57.974290,augustopontes010@gmail.com,1,2,
+kct,Porra,2023-10-28 04:58:50.695707,augustopontes010@gmail.com,2,1,
+Porra,kct,2023-10-29 20:32:00.811594,augustopontes010@gmail.com,1,2,
+Porra,Cacete,2023-10-29 20:32:57.054684,augustopontes010@gmail.com,1,2,

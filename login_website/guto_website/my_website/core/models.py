@@ -43,5 +43,10 @@ class CadastroUsuarioHistorico(models.Model):
     
 
 #Criar conta de banimento
-class Banned:
-    pass
+class Banimento(models.Model):
+    usuario = models.ForeignKey(CadastroUsuario, on_delete=models.CASCADE)
+    motivo = models.CharField(max_length=255)
+    data_banimento = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.usuario.complete_name} - {self.motivo}"

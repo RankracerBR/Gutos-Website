@@ -1,4 +1,4 @@
-from .models import CadastroUsuario, CadastroUsuarioHistorico
+from .models import CadastroUsuario, CadastroUsuarioHistorico, Banimento
 from django.http import HttpResponse
 from django.contrib import admin
 import unicodedata
@@ -69,6 +69,11 @@ class CadastroUsuarioHistoricoAdmin(admin.ModelAdmin):
     export_to_csv.short_description = "Exportar os Logs selecionados para CSV"
 
     actions = [export_to_csv]
+    
+class BanimentoAdmin(admin.ModelAdmin):
+    list_display = ('usuario','motivo','data_banimento')
+    list_filter = ('usuario','motivo','data_banimento')
 
 admin.site.register(CadastroUsuario, CadastroUsuarioAdmin)
 admin.site.register(CadastroUsuarioHistorico, CadastroUsuarioHistoricoAdmin)
+admin.site.register(Banimento, BanimentoAdmin)
