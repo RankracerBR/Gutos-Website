@@ -5,13 +5,11 @@ from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.contrib.auth import logout
 from django.http import HttpResponse
-from django.contrib import messages
 from django.conf import settings
 from .forms import RegistroForm
 import subprocess
 import platform
 import random
-import sys
 
 '''Tela de Login'''
 def Login_Usuario(request):
@@ -40,8 +38,7 @@ def Login_Usuario(request):
 
         except CadastroUsuario.DoesNotExist:
             mensagem_erro = "Credenciais incorretas. Tente novamente."
-            messages.error(request, mensagem_erro) 
-            return render(request, 'index.html')
+            return render(request, 'index.html', {'mensagem_erro':mensagem_erro})
 
     return render(request, 'index.html')
 

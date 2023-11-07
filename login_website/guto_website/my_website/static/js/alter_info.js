@@ -5,6 +5,9 @@ $(document).ready(function () {
 
         var formData = new FormData(this);
 
+        // Mostra a animação de carregamento quando o formulário é enviado
+        showLoadingAnimation();
+
         $.ajax({
             type: "POST",
             url: $(this).attr('action'),
@@ -13,11 +16,17 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function (data) {
+                // Esconde a animação de carregamento
+                hideLoadingAnimation();
+
                 $("#nome-value").text(data.nome);
                 $("#descricao").text(data.descricao);
-                $("#mensagem").text("Dados atualizados com sucesso, caso não a página não reflita as mudanças, por-favor recarregue a página");
+                $("#mensagem").text("Dados atualizados com sucesso, caso a página não reflita as mudanças, por favor recarregue a página");
             },
             error: function () {
+                // Esconde a animação de carregamento
+                hideLoadingAnimation();
+
                 $("#mensagem").text("Erro ao atualizar os dados.");
             }
         });

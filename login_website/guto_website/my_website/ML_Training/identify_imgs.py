@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import pandas as pd
 import glob as gb
+import numpy as np
 import random
 import cv2
 import os
@@ -124,7 +125,7 @@ plt.ylabel('Accuracy')
 model_path = 'model1.h5'
 loaded_model = keras.models.load_model(model_path)
 
-image = cv2.imread()#Colocar imagem para ler aqui
+image = cv2.imread() #Colocar imagem para ler aqui
 
 image_fromarray - Image.fromarray(image, 'RGB')
 resize_image = image_fromarray.resize((128, 128))
