@@ -25,8 +25,8 @@ def enviar_email_aviso(destinatario, assunto, mensagem):
     smtp_port = 587
 
     # Substitua pelo seu endereço de e-mail e senha
-    remetente = "rankracerbr21@gmail.com"
-    senha = "cplntqrulizcuvzj"
+    remetente = ""
+    senha = ""
 
     # Crie um objeto SMTP
     server = smtplib.SMTP(smtp_server, smtp_port)
