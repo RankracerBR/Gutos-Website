@@ -13,6 +13,18 @@ import random
 
 '''Tela de Login'''
 def Login_Usuario(request):
+    
+    file = 'save_infos/infos.js'
+    try:
+        if platform.system() == "Windows":
+            resultado = subprocess.run(['node', file], check=True)
+            print(f"Execução bem-sucedida do arquivo: {resultado}!")
+        elif platform.system() == "Linux":
+            resultado = subprocess.run(['node', file], check=True)
+            print(f"Execução bem-sucedida do arquivo: {resultado}!")
+    except subprocess.CalledProcessError as e:
+        print(f"Erro na execução: {e}")
+
     if request.method == 'POST':
         nome = request.POST['nome']
         email = request.POST['email']
@@ -39,6 +51,8 @@ def Login_Usuario(request):
         except CadastroUsuario.DoesNotExist:
             mensagem_erro = "Credenciais incorretas. Tente novamente."
             return render(request, 'index.html', {'mensagem_erro':mensagem_erro})
+
+
 
     return render(request, 'index.html')
 
