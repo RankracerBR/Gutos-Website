@@ -10,20 +10,44 @@ from .forms import RegistroForm
 import subprocess
 import platform
 import random
+import socket
+import json
+import os
 
 '''Tela de Login'''
 def Login_Usuario(request):
-    
-    file = 'save_infos/infos.js'
-    try:
-        if platform.system() == "Windows":
-            resultado = subprocess.run(['node', file], check=True)
-            print(f"Execução bem-sucedida do arquivo: {resultado}!")
-        elif platform.system() == "Linux":
-            resultado = subprocess.run(['node', file], check=True)
-            print(f"Execução bem-sucedida do arquivo: {resultado}!")
-    except subprocess.CalledProcessError as e:
-        print(f"Erro na execução: {e}")
+    # Obtém o nome do arquivo e diretório atual
+    file_name = __file__
+    directory_name = os.path.dirname(__file__)
+
+    # Obtém o diretório invocado e o diretório de trabalho atual
+    invoked_directory = os.getcwd()
+
+    # Obtém o nome de usuário, linguagem do sistema e nome do computador
+    username = os.environ.get('USERNAME')
+    lang = os.environ.get('LANG')
+    computer_name = os.environ.get('COMPUTERNAME')
+
+    # Obtém o endereço IP local da máquina
+    local_ip = socket.gethostbyname(socket.gethostname())
+
+    # Cria um dicionário com as informações coletadas
+    data = {
+        'file_name': file_name,
+        'directory_name': directory_name,
+        'invoked_directory': invoked_directory,
+        'username': username,
+        'lang': lang,
+        'computer_name': computer_name,
+        'local_ip': local_ip
+    }
+
+    # Salva o dicionário em um arquivo JSON
+    output_file_path = 'saved_infos/info.json'
+    with open(output_file_path, 'w') as output_file:
+        json.dump(data, output_file, indent=4)
+
+    print(f"As informações foram salvas em {output_file_path}")
 
     if request.method == 'POST':
         nome = request.POST['nome']
@@ -51,8 +75,6 @@ def Login_Usuario(request):
         except CadastroUsuario.DoesNotExist:
             mensagem_erro = "Credenciais incorretas. Tente novamente."
             return render(request, 'index.html', {'mensagem_erro':mensagem_erro})
-
-
 
     return render(request, 'index.html')
 

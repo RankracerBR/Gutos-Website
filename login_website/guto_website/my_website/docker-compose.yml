@@ -7,6 +7,8 @@ services:
       - sh
       - -c
       - |
+        apt-get update && apt-get install -y nodejs npm  # Instalação do Node.js no Ubuntu
+        npm install  # Instalação de dependências Node.js
         python -m pip install pandas
         python -m pip install Pillow
         python manage.py runserver 0.0.0.0:8000

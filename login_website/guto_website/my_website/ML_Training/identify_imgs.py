@@ -33,8 +33,8 @@ def view_random_image(target_dir, target_class):
     return img
 
 #Referência as pastas
-TRAIN_DIR = "ML_Training/Violence_Datasets/train"
-TEST_DIR = "ML_Training/Violence_Datasets/test"
+TRAIN_DIR = "Violence_Datasets/train"
+TEST_DIR = "Violence_Datasets/train"
 BATCH_SIZE = 64
 
 #Conta a quantidade de imagens
@@ -53,7 +53,7 @@ plt.figure(figsize=(10, 10))
 for i in range(18):
     plt.subplot(3, 6, i+1)
     class_name = random.choice(class_names)
-    img = view_random_image(target_dir='ML_Training/Violence_Datasets/train/', target_class=class_name)
+    img = view_random_image(target_dir='Violence_Datasets/train/', target_class=class_name)
 plt.show()
 
 #Preparando para o Treinamento
