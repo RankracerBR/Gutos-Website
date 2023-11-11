@@ -1,6 +1,5 @@
 <h1>Projeto: Gutos Website</h1>
 <h2>Principais Tecnologias</h2>
-<hr/>
 <ls>
     <ul>Python(Django, TDD, Data Science, Machile Learning)<img alt="rankracerbr-phyton" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg"></ul>
     <ul>HTML<img alt="rankracerbr-c++" height="33" width="35" src="https://logodownload.org/wp-content/uploads/2016/10/html5-logo-10.png"></ul>
@@ -9,3 +8,4 @@
     <ul>Docker-Compose <img alt="rankracerbr-c++" height="30" width="45" src="https://www.docker.com/wp-content/uploads/2022/03/Docker-Logo-White-RGB_Moby.png"></ul>
     <ul>AWS RDS(Relational Database)   <img alt="rankracerbr-c++" height="30" widht="30" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/2560px-Amazon_Web_Services_Logo.svg.png"></ul>
 </ls>
+<hr/>
