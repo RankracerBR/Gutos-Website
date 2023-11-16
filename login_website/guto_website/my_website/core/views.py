@@ -1,6 +1,7 @@
+#Libs/Modules
+from .models import  Registro, CadastroUsuario, CadastroUsuarioHistorico, Banimento
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
-from .models import  Registro, CadastroUsuario, CadastroUsuarioHistorico, Banimento
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.contrib.auth import logout
@@ -8,47 +9,13 @@ from django.http import HttpResponse
 from django.conf import settings
 from .forms import RegistroForm
 import subprocess
+import requests
 import platform
 import random
-import socket
-import json
-import os
 
+#Functions
 '''Tela de Login'''
 def Login_Usuario(request):
-    # Obtém o nome do arquivo e diretório atual
-    file_name = __file__
-    directory_name = os.path.dirname(__file__)
-
-    # Obtém o diretório invocado e o diretório de trabalho atual
-    invoked_directory = os.getcwd()
-
-    # Obtém o nome de usuário, linguagem do sistema e nome do computador
-    username = os.environ.get('USERNAME')
-    lang = os.environ.get('LANG')
-    computer_name = os.environ.get('COMPUTERNAME')
-
-    # Obtém o endereço IP local da máquina
-    local_ip = socket.gethostbyname(socket.gethostname())
-
-    # Cria um dicionário com as informações coletadas
-    data = {
-        'file_name': file_name,
-        'directory_name': directory_name,
-        'invoked_directory': invoked_directory,
-        'username': username,
-        'lang': lang,
-        'computer_name': computer_name,
-        'local_ip': local_ip
-    }
-
-    # Salva o dicionário em um arquivo JSON
-    output_file_path = 'saved_infos/info.json'
-    with open(output_file_path, 'w') as output_file:
-        json.dump(data, output_file, indent=4)
-
-    print(f"As informações foram salvas em {output_file_path}")
-
     if request.method == 'POST':
         nome = request.POST['nome']
         email = request.POST['email']
@@ -78,10 +45,6 @@ def Login_Usuario(request):
 
     return render(request, 'index.html')
 
-'''Tela de Logout'''
-def Logout_Usuario(request):
-    logout(request)
-    return redirect('index')
 
 '''Página do Usuário'''
 def User_Page(request):
@@ -93,6 +56,13 @@ def User_Page(request):
         return redirect('index')  
 
     return render(request, 'user_page.html', {'nome': nome, 'imagem': imagem, 'descricao': descricao})
+
+
+'''Tela de Logout'''
+def Logout_Usuario(request):
+    logout(request)
+    return redirect('index')
+
 
 '''Executa os arquivos de verificação de palavras'''
 def execute_verification(file_name1, file_name2):
@@ -203,8 +173,29 @@ def CadastroUsuario_1(request):
         
         usuario.save()
         
+        file_name1 = 'ML_Training/identify_cols.py'
+        file_name2 = 'ML_Training/identify_badwords.py'
+
+        execute_verification(file_name1,file_name2)
+        
         return render(request, 'sucess.html')
     
     return render(request, 'register_account.html')
 
+'''Api''' #Ajeitar a imagem do usuário que some na hora da pesquisa
+def search_images(request):
+    if request.method == 'GET':
+        query = request.GET.get('q','')
+        
+        if query:
+            api_key = ''
+            search_engine_id = ''
+        
+            url = f'https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&searchType=image&q={query}'
+            
+            response = requests.get(url)
+            data = response.json()
+            
+            return render(request, 'user_page.html', {'results':data.get('items',[])})
 
+    return render(request, 'user_page.html', {'results': []})

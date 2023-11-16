@@ -32,5 +32,18 @@
     </div>
     <div id="mensagem"></div>
     <script src="{% static 'js/alter_info.js' %}"></script>
+    <br>
+    </br>
+    <h2>Não sabe qual imagem de perfil escolher? digite aqui em baixo</h2>
+    <form method="GET" action="{% url 'search_images'%}">
+        <input type="text" name="q" placeholder="Pesquise sua imagem">
+        <button type="submit">Pesquisar</button>
+    </form>
+    {% if results %}
+        <h2>Resultados da Pesquisa</h2>
+        {% for result in results%}
+            <img src="{{ result.link }}" alt="{{ result.title }}">
+        {% endfor %}
+    {% endif %}
 </body>
 </html>

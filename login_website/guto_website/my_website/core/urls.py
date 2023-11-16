@@ -1,8 +1,10 @@
+#Libs/Modules
 from django.urls import path, re_path
 from django.conf.urls.static import static
 from django.conf import settings
 from . import views
 
+#Rotas
 urlpatterns = [
     path('', views.Login_Usuario, name='index'), #Rota da pagina principal
     path('send_token/', views.Registration_Token, name="send_token"), #Envio do token
@@ -11,6 +13,7 @@ urlpatterns = [
     path('register_user/', views.CadastroUsuario_1, name="register_user"), #Cadastro no Banco de Dados
     path('atualizar_dados_usuario/', views.Atualizar_Usuario, name='Atualizar_Usuario'),
     path('logout/', views.Logout_Usuario, name='logout'), #Logout do Usuário
+    path('search_images', views.search_images, name="search_images"), #
     re_path(r'^.*/$', views.Login_Usuario, name ='catch_all')#Se o usuário digita algo na url, sempre será redirecionado
 ]
 
