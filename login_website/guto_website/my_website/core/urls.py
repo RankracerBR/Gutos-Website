@@ -11,9 +11,9 @@ urlpatterns = [
     path('verify/<str:token>', views.verify, name='verify'), #Token 
     path('pagina_usuario/',views.User_Page, name="pagina_usuario"), #Página do usuário 
     path('register_user/', views.CadastroUsuario_1, name="register_user"), #Cadastro no Banco de Dados
-    path('atualizar_dados_usuario/', views.Atualizar_Usuario, name='Atualizar_Usuario'),
+    path('atualizar_dados_usuario/', views.Atualizar_Usuario, name="Atualizar_Usuario"), #Atualiza o usuário
     path('logout/', views.Logout_Usuario, name='logout'), #Logout do Usuário
-    path('search_images', views.search_images, name="search_images"), #
+    path('search_images', views.search_images, name="search_images"), # Api de imagens
     re_path(r'^.*/$', views.Login_Usuario, name ='catch_all')#Se o usuário digita algo na url, sempre será redirecionado
 ]
 

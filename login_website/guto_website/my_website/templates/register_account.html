@@ -8,9 +8,10 @@
         <h1>Complete seu Cadastro</h1>
     </center>
 </head>
+
 <body>
     <center>
-        <form method="post" action="{% url 'register_user' %}" enctype="multipart/form-data"> <!--MUDA PARA COLOCAR FOTO-->
+        <form method="post" action="{% url 'register_user' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <label for="complete_name">Nome completo:</label>
             <input type="text" name="complete_name" required>
@@ -36,4 +37,5 @@
         {% endif %}
     </center>
 </body>
+
 </html>

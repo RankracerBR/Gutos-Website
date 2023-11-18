@@ -7,18 +7,20 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
     <a href="{% url 'logout' %}">Sair</a>
     <h1>Esta é sua página</h1>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
     <center>
-        {% csrf_token %}
         <h1>Bem-vindo {{ nome }}</h1>
         <img src="{{ imagem }}" alt="Imagem do usuário" width="200px" height="200px">
         <p id="descricao">{{ descricao }}</p>
     </center>
     <button id="mostrarOpcoes">Mostrar Opções de Alteração</button>
     <div id="opcoesAlteracao" style="display: none;">
-    <form id="atualizar-form" method="post" action="{% url 'Atualizar_Usuario' %}" enctype="multipart/form-data">
+    <form id="atualizar-form" method="POST" action="{% url 'Atualizar_Usuario' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="text" name="nome" value="{{ nome }}">
         <textarea name="descricao">{{ descricao }}</textarea>
@@ -35,15 +37,20 @@
     <br>
     </br>
     <h2>Não sabe qual imagem de perfil escolher? digite aqui em baixo</h2>
-    <form method="GET" action="{% url 'search_images'%}">
+    <form method="get" action="{% url 'search_images'%}">
+        {% csrf_token %}
         <input type="text" name="q" placeholder="Pesquise sua imagem">
         <button type="submit">Pesquisar</button>
     </form>
     {% if results %}
         <h2>Resultados da Pesquisa</h2>
-        {% for result in results%}
+        {% for result in results %}
+            <div class="carousel-item">
             <img src="{{ result.link }}" alt="{{ result.title }}">
+            </div>
         {% endfor %}
     {% endif %}
+    <script src="{% static 'js/api_form.js'%}"></script>
 </body>
+
 </html>

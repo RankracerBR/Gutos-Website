@@ -78,6 +78,25 @@ def execute_verification(file_name1, file_name2):
         print("Sistema operacional não suportado")
     
     #Chamar arquivo identify_imgs.py
+
+'''Api'''
+def search_images(request):
+    if request.method == 'GET':
+        query = request.GET.get('q','')
+        
+        if query:
+            api_key = 'AIzaSyCq2VHeLaFt7BojWWYo97wHeanOLhCVOVc'
+            search_engine_id = '646f6762000414f9f'
+        
+            url = f'https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&searchType=image&q={query}'
+            
+            response = requests.get(url)
+            data = response.json()
+            
+            return render(request, 'user_page.html', {'results': data.get('items', []),
+                                                      'nome': request.session.get('nome'),
+                                                      'imagem': request.session.get('imagem'),
+                                                      'descricao': request.session.get('descricao')}) #Corrige o bug de sumir com a imagem do usuário
     
 '''Atualiza o Perfil do Usuário'''
 @login_required
@@ -182,20 +201,5 @@ def CadastroUsuario_1(request):
     
     return render(request, 'register_account.html')
 
-'''Api''' #Ajeitar a imagem do usuário que some na hora da pesquisa
-def search_images(request):
-    if request.method == 'GET':
-        query = request.GET.get('q','')
-        
-        if query:
-            api_key = ''
-            search_engine_id = ''
-        
-            url = f'https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&searchType=image&q={query}'
-            
-            response = requests.get(url)
-            data = response.json()
-            
-            return render(request, 'user_page.html', {'results':data.get('items',[])})
 
-    return render(request, 'user_page.html', {'results': []})
+
