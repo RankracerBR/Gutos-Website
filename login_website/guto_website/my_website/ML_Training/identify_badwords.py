@@ -1,6 +1,8 @@
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
+from core.models import Banimento
+from datetime import datetime
 import pandas as pd
 import smtplib
 
@@ -25,7 +27,7 @@ def enviar_email_aviso(destinatario, assunto, mensagem):
     smtp_port = 587
 
     # Substitua pelo seu endereço de e-mail e senha
-    remetente = ""
+    remetente = "rankracerbr21@gmail.com"
     senha = ""
 
     # Crie um objeto SMTP
@@ -83,7 +85,7 @@ for index, row in df.iterrows():
 
         else:
             data_aviso = row['data_aviso']
-            tempo_decorrido = datatime.now() - data_aviso
+            tempo_decorrido = datetime.now() - data_aviso
             if tempo_decorrido >= timedelta(hours=24):
                 banimento = Banimento()
                 banimento.usuario = row['email_do_usuario']

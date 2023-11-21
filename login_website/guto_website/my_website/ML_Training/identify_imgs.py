@@ -9,8 +9,8 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 from PIL import Image
 import pandas as pd
-import glob as gb
 import numpy as np
+import glob as gb
 import random
 import cv2
 import os

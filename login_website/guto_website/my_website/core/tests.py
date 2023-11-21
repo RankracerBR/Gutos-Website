@@ -1,6 +1,7 @@
-from django.test import TestCase
-from sqlalchemy import update
 from .models import CadastroUsuario
+from django.test import TestCase
+from django.test import  TestCase
+
 
 # Create your tests here.
 class CadastroUsuarioModelTest(TestCase):
@@ -56,5 +57,3 @@ class CadastroUsuarioModelTest(TestCase):
         with self.assertRaises(CadastroUsuario.DoesNotExist):
             CadastroUsuario.objects.get(complete_email="charlie@doesnt_exist_example.com")
             
-    def setUp(self):
-        pass ##testar o login_required

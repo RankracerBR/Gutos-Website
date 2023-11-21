@@ -2,6 +2,7 @@
 from .models import  Registro, CadastroUsuario, CadastroUsuarioHistorico, Banimento
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
+from ML_Training import identify_words_content as idc
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.contrib.auth import logout
@@ -12,6 +13,7 @@ import subprocess
 import requests
 import platform
 import random
+
 
 #Functions
 '''Tela de Login'''
@@ -79,25 +81,7 @@ def execute_verification(file_name1, file_name2):
     
     #Chamar arquivo identify_imgs.py
 
-'''Api'''
-def search_images(request):
-    if request.method == 'GET':
-        query = request.GET.get('q','')
-        
-        if query:
-            api_key = 'AIzaSyCq2VHeLaFt7BojWWYo97wHeanOLhCVOVc'
-            search_engine_id = '646f6762000414f9f'
-        
-            url = f'https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&searchType=image&q={query}'
-            
-            response = requests.get(url)
-            data = response.json()
-            
-            return render(request, 'user_page.html', {'results': data.get('items', []),
-                                                      'nome': request.session.get('nome'),
-                                                      'imagem': request.session.get('imagem'),
-                                                      'descricao': request.session.get('descricao')}) #Corrige o bug de sumir com a imagem do usuário
-    
+
 '''Atualiza o Perfil do Usuário'''
 @login_required
 def Atualizar_Usuario(request):
@@ -133,6 +117,31 @@ def Atualizar_Usuario(request):
         execute_verification(file_name1,file_name2)
     
         return redirect('pagina_usuario')
+
+    return redirect('index')
+
+'''Api'''
+@login_required
+def search_images(request):
+    if request.method == 'GET':
+        query = request.GET.get('q','')
+        
+        if query:
+            api_key = 'AIzaSyCq2VHeLaFt7BojWWYo97wHeanOLhCVOVc'
+            search_engine_id = '646f6762000414f9f'
+        
+            url = f'https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&searchType=image&q={query}'
+            
+            response = requests.get(url)
+            data = response.json()
+            
+            detection_result = idc.detect_prohibited_content(query)
+            print(detection_result)
+
+            return render(request, 'user_page.html', {'results': data.get('items', []),
+                                                      'nome': request.session.get('nome'),
+                                                      'imagem': request.session.get('imagem'),
+                                                      'descricao': request.session.get('descricao')}) #Corrige o bug de sumir com a imagem do usuário
 
 '''Registro para envio do formulário'''
 def Registration_Token(request):
