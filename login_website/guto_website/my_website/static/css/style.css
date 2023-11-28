@@ -18,3 +18,16 @@ body{
         transform: rotateX(0);
     }
   }
+
+.carousel-item{
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-item img{
+    transition: transform 0.3s ease;
+}
+
+.carousel-item img:hover {
+    transform: scale(1.2);
+}

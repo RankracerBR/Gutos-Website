@@ -56,4 +56,9 @@ class CadastroUsuarioModelTest(TestCase):
         
         with self.assertRaises(CadastroUsuario.DoesNotExist):
             CadastroUsuario.objects.get(complete_email="charlie@doesnt_exist_example.com")
-            
+
+
+class TestQueryApi(TestCase):
+    pass
+
+##Depois fazer testes no front-end

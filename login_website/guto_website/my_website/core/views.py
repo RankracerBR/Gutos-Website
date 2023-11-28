@@ -135,9 +135,11 @@ def search_images(request):
             response = requests.get(url)
             data = response.json()
             
-            detection_result = idc.detect_prohibited_content(query)
-            print(detection_result)
-
+            detect = idc.detector
+            result = detect.detect_prohibited_content(query)
+            
+            print(result)
+            
             return render(request, 'user_page.html', {'results': data.get('items', []),
                                                       'nome': request.session.get('nome'),
                                                       'imagem': request.session.get('imagem'),

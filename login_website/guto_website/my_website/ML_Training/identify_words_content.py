@@ -1,33 +1,35 @@
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+import numpy as np
 import csv
 
-def detect_prohibited_content(input_text):
-    terms_to_detect = ['porn', 'sex']
-    input_list = [input_text]
-
-    with open('ML_Training/Users_csv/inputs.csv', 'a', newline='', encoding='utf-8') as csvfile:
-        fieldnames = ['Input Text']
+class ProhibitedContentDetector:
+    def __init__(self):
+        self.vectorizer = TfidfVectorizer()
+        self.model = MultinomialNB()
+        self.terms_to_detect = ['porn','sex']
+        self.labels = [0,1]
         
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        # Verificar se é a primeira vez que o arquivo é aberto
-        if csvfile.tell() == 0:
-            writer.writeheader()
-
-        # Escrever o input no arquivo CSV
-        writer.writerow({'Input Text': input_text})
+    def train(self,data,labels):
+        X = self.vectorizer.fit_transform(data)
+        self.model.fit(X, labels)
+    
+    def detect_prohibited_content(self, input_text):
+        input_vector = self.vectorizer.transform([input_text])
+        prediction = self.model.predict(input_vector)
         
-    vectorizer = CountVectorizer(vocabulary=terms_to_detect)
-    input_matrix = vectorizer.fit_transform(input_list)
+        if prediction[0] == 1:
+            return "Conteúdo proibido foi detectado"
+        else:
+            return "Nenhum conteúdo proibido foi detectado"
 
-    # Transforma a matriz esparsa em uma matriz densa
-    input_matrix_dense = input_matrix.toarray()
+data = [
+    "Este é um texto sem conteúdo proibido",
+    "Aqui há palavras proibidas como porn e sex"
+]
 
-    # Obtém a contagem de cada palavra
-    word_counts = input_matrix_dense.sum(axis=0)
+labels = np.array([0,1])
 
-    for term, count in zip(terms_to_detect, word_counts):
-        if count > 0:
-            return f"O termo '{term}' foi detectado no input."
+detector = ProhibitedContentDetector()
+detector.train(data,labels)
 
-    return "Nenhum termo foi detectado."
