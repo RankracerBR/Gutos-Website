@@ -42,6 +42,33 @@ class CadastroUsuarioHistorico(models.Model):
         return f"{self.usuario.complete_name} - {self.usuario.complete_email} - {self.data_atualizacao}"
     
 
+class Post(models.Model):
+    author = models.ForeignKey(CadastroUsuario, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'Post'
+    
+    def __str__(self):
+        return f"{self.author} - {self.title} - {self.content} - {self.created_at}"
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(CadastroUsuario, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'Comment'
+    
+    def __str__(self):
+        return f"{self.post} - {self.author} - {self.text} - {self.created_at}"
+    
+
+##Manutenção
 #Criar conta de banimento
 class Banimento(models.Model):
     usuario = models.ForeignKey(CadastroUsuario, on_delete=models.CASCADE)
