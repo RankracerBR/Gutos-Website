@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <a href="{% url 'create_post' %}">Posts</a>
 </head>
 
 <body>
@@ -20,7 +21,7 @@
     </center>
     <button id="mostrarOpcoes">Mostrar Opções de Alteração</button>
     <div id="opcoesAlteracao" style="display: none;">
-    <form id="atualizar-form" method="POST" action="{% url 'Atualizar_Usuario' %}" enctype="multipart/form-data">
+    <form id="atualizar-form" method="post" action="{% url 'Atualizar_Usuario' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="text" name="nome" value="{{ nome }}">
         <textarea name="descricao">{{ descricao }}</textarea>
