@@ -1,4 +1,4 @@
-from .models import CadastroUsuario, CadastroUsuarioHistorico, Banimento
+from .models import CadastroUsuario, CadastroUsuarioHistorico, Banimento, Post, Comment
 from django.http import HttpResponse
 from django.contrib import admin
 import unicodedata
@@ -74,6 +74,9 @@ class BanimentoAdmin(admin.ModelAdmin):
     list_display = ('usuario','motivo','data_banimento')
     list_filter = ('usuario','motivo','data_banimento')
 
+
 admin.site.register(CadastroUsuario, CadastroUsuarioAdmin)
 admin.site.register(CadastroUsuarioHistorico, CadastroUsuarioHistoricoAdmin)
 admin.site.register(Banimento, BanimentoAdmin)
+admin.site.register(Comment)
+admin.site.register(Post)

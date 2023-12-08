@@ -43,7 +43,7 @@ class CadastroUsuarioHistorico(models.Model):
     
 
 class Post(models.Model):
-    author = models.ForeignKey(CadastroUsuario, on_delete=models.CASCADE)
+    author= models.ForeignKey(CadastroUsuario, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -52,20 +52,20 @@ class Post(models.Model):
         db_table = 'Post'
     
     def __str__(self):
-        return f"{self.author} - {self.title} - {self.content} - {self.created_at}"
+        return f"{self.title} - {self.author.complete_name}"
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    author = models.ForeignKey(CadastroUsuario, on_delete=models.CASCADE)
-    text = models.TextField()
+    user = models.ForeignKey(CadastroUsuario, on_delete=models.CASCADE, related_name='comments')
+    title = models.ForeignKey(Post, on_delete=models.CASCADE)
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         db_table = 'Comment'
     
     def __str__(self):
-        return f"{self.post} - {self.author} - {self.text} - {self.created_at}"
+        return f"Comment by {self.user.complete_name}"
     
 
 ##Manutenção

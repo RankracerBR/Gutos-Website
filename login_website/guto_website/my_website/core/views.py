@@ -1,14 +1,14 @@
 #Libs/Modules
-from .models import  Registro, CadastroUsuario, CadastroUsuarioHistorico, Banimento
+from .models import  Registro, CadastroUsuario, CadastroUsuarioHistorico, Banimento, Post, Comment
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
 from ML_Training import identify_words_content as idc
-from django.shortcuts import render, redirect
+from .forms import RegistroForm, PostForm, CommentForm
 from django.core.mail import send_mail
 from django.contrib.auth import logout
 from django.http import HttpResponse
 from django.conf import settings
-from .forms import RegistroForm
 import subprocess
 import requests
 import platform
@@ -118,13 +118,11 @@ def Atualizar_Usuario(request):
     
         return redirect('pagina_usuario')
 
-    return redirect('index')
 
 '''Api'''
-@login_required
 def search_images(request):
     if request.method == 'GET':
-        query = request.GET.get('q','')
+        query = request.GET.get('q')
         
         if query:
             api_key = 'AIzaSyCq2VHeLaFt7BojWWYo97wHeanOLhCVOVc'
@@ -213,4 +211,31 @@ def CadastroUsuario_1(request):
     return render(request, 'register_account.html')
 
 
+##Modificar o create_post e create_comment para mostra o conteúdo real no admin.py
 
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            user = CadastroUsuario.objects.get(id=request.user.id)
+            content = form.cleaned_data['content']
+            post = Post.objects.create(author=user, title="Your Title", content=content)
+            return redirect('create_post')
+    else:
+        form = PostForm()
+    return render(request, 'posts.html', {'form': form})
+
+@login_required
+def create_comment(request, post_id):
+    post = Post.objects.get(id=post_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            user = CadastroUsuario.objects.get(id=request.user.id)
+            content = form.cleaned_data['content']
+            comment = Comment.objects.create(user=user, post=post, content=content)
+            return redirect('create_post', post_id=post_id)
+    else:
+        form = CommentForm()
+    return render(request, 'posts.html', {'form':form, 'post':post})
