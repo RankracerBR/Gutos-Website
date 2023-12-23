@@ -5,8 +5,10 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
 from ML_Training import identify_words_content as idc
 from .forms import RegistroForm, PostForm, CommentForm
+from django.views.decorators.csrf import csrf_protect
 from django.core.mail import send_mail
 from django.contrib.auth import logout
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse
 from django.conf import settings
 import subprocess
@@ -49,6 +51,7 @@ def Login_Usuario(request):
 
 
 '''Página do Usuário'''
+@login_required
 def User_Page(request):
     nome = request.session.get('nome')
     imagem = request.session.get('imagem')

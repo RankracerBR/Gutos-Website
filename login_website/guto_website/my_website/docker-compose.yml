@@ -9,6 +9,8 @@ services:
       - |
         python -m pip install pandas
         python -m pip install Pillow
+        python -m pip install requests
+        python -m pip install scikit-learn
         python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
