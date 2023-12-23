@@ -112,7 +112,7 @@ classifier.save('model1.h5') #Cria um arquivo do tipo HDF5 para salvar o treinam
 
 classifier.evaluate(test_set) 
 
-pd.DataFrame(history.history())[['loss','val_loss']].plot()
+pd.DataFrame(history.history)[['loss','val_loss']].plot()
 plt.title('Loss')
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
@@ -121,7 +121,6 @@ pd.DataFrame(history.history)[['accuracy','val_accuracy']].plot()
 plt.title('Accuracy')
 plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
-
 model_path = 'model1.h5'
 loaded_model = keras.models.load_model(model_path)
 

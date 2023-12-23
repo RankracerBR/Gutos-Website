@@ -211,20 +211,21 @@ def CadastroUsuario_1(request):
     return render(request, 'register_account.html')
 
 
-##Modificar o create_post e create_comment para mostra o conteúdo real no admin.py
-
 @login_required
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
             user = CadastroUsuario.objects.get(id=request.user.id)
+            title = form.cleaned_data['title']
             content = form.cleaned_data['content']
-            post = Post.objects.create(author=user, title="Your Title", content=content)
+            post = Post.objects.create(author=user, title=title, content=content)
             return redirect('create_post')
     else:
         form = PostForm()
-    return render(request, 'posts.html', {'form': form})
+    posts = Post.objects.all()
+    return render(request, 'posts.html', {'form': form, 'posts': posts})
+
 
 @login_required
 def create_comment(request, post_id):
@@ -234,8 +235,8 @@ def create_comment(request, post_id):
         if form.is_valid():
             user = CadastroUsuario.objects.get(id=request.user.id)
             content = form.cleaned_data['content']
-            comment = Comment.objects.create(user=user, post=post, content=content)
-            return redirect('create_post', post_id=post_id)
+            comment = Comment.objects.create(user=user, title=post, content=content)
+            return redirect('create_post')  # Redirecionar para a página de posts após a criação do comentário
     else:
         form = CommentForm()
-    return render(request, 'posts.html', {'form':form, 'post':post})
+    return render(request, 'posts.html', {'form': form, 'post': post})

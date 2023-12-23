@@ -14,6 +14,7 @@ urlpatterns = [
     path('atualizar_dados_usuario/', views.Atualizar_Usuario, name="Atualizar_Usuario"), #Atualiza o usuário
     path('logout/', views.Logout_Usuario, name='logout'), #Logout do Usuário
     path('posts/', views.create_post, name="create_post"),
+    path('comments/<int:post_id>', views.create_comment, name="create_comment"),
     path('search_images', views.search_images, name="search_images"), # Api de imagens
     re_path(r'^.*/$', views.Login_Usuario, name ='catch_all')#Se o usuário digita algo na url, sempre será redirecionado
 ]

@@ -1,25 +1,59 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Chats</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    </head>
-    <body>
-      <form method="post">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Chats</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <form method="post" action="{% url 'create_post' %}">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit">Enviar Post</button> 
-    </form>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Enviar Comentário</button>
-    </form>
+      <button type="submit">Enviar Post</button>
+  </form>
+
+  <!-- Iterar sobre os posts existentes -->
+  {% for post in posts %}
+      <div>
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.content }}</p>
+
+          <!-- Botão para revelar o formulário de comentário -->
+          <button onclick="toggleCommentForm('{{ post.id }}')">Adicionar Comentário</button>
+
+          <!-- Formulário de comentário oculto por padrão -->
+          <form id="commentForm-{{ post.id }}" method="post" action="{% url 'create_comment' post.id %}" style="display: none;">
+              {% csrf_token %}
+              <label for="comment">Adicionar Comentário:</label><br>
+              <textarea name="content" id="comment" cols="30" rows="3"></textarea><br>
+              <!-- Adicione um campo oculto para o post_id -->
+              <input type="hidden" name="post_id" value="{{ post.id }}">
+              <button type="submit">Enviar Comentário</button>
+          </form>
+
+          <!-- Exibir os comentários existentes para o post -->
+          <ul>
+              {% for comment in post.comment_set.all %}
+                  <li>{{ comment.content }}</li>
+              {% endfor %}
+          </ul>
       </div>
-    </body>
+  {% endfor %}
+
+  <!-- Script para exibir/ocultar formulário de comentário -->
+  <script>
+      function toggleCommentForm(postId) {
+          var commentForm = document.getElementById('commentForm-' + postId);
+          if (commentForm.style.display === 'none') {
+              commentForm.style.display = 'block';
+          } else {
+              commentForm.style.display = 'none';
+          }
+      }
+  </script>
+</body>
 </html>

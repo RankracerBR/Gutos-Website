@@ -10,7 +10,7 @@ class RegistroForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['content']
+        fields = ['title','content']
 
 class CommentForm(forms.ModelForm):
     class Meta:

@@ -1,5 +1,6 @@
 import pandas as pd
 import sqlite3
+from pymongo import MongoClient
 
 # Conecte-se ao arquivo SQLite
 conn = sqlite3.connect('db.sqlite3')
@@ -21,5 +22,20 @@ df = pd.read_sql_query(query, conn)
 # Feche a conexão com o arquivo SQLite
 conn.close()
 
+
 # Salve o DataFrame como um arquivo CSV
 df.to_csv('ML_Training/Users_csv/dados_usuarios.csv', index=False)
+
+'''
+data = df.to_dict(orient='records')
+
+client = MongoClient('localhost',27017)
+
+db = client['test']
+collection = db['testusers']
+
+collection.insert_many(data)
+
+client.close()
+'''
+
