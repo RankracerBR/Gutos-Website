@@ -1,4 +1,5 @@
 from keras.preprocessing.image import ImageDataGenerator
+import tensorflow as tf
 from tensorflow import keras
 from keras.layers import MaxPooling2D
 from keras.models import Sequential
@@ -14,6 +15,8 @@ import glob as gb
 import random
 import cv2
 import os
+
+
 
 #Função de analisar a imagem
 def view_random_image(target_dir, target_class):
@@ -31,6 +34,8 @@ def view_random_image(target_dir, target_class):
     print(f'-Image Shape: {img.shape}')
     
     return img
+
+
 
 #Referência as pastas
 TRAIN_DIR = "Violence_Datasets/train"
@@ -102,38 +107,59 @@ classifier.compile(optimizer = 'adam', loss="categorical_crossentropy", metrics 
 classifier.summary()
 
 
-'''Treinamento em manutenção'''
-#Treinamento
-history = classifier.fit(training_set,
-                         epochs = 10,
-                         validation_data = test_set)
-
-classifier.save('model1.h5') #Cria um arquivo do tipo HDF5 para salvar o treinamento
-
-classifier.evaluate(test_set) 
-
-pd.DataFrame(history.history)[['loss','val_loss']].plot()
-plt.title('Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-
-pd.DataFrame(history.history)[['accuracy','val_accuracy']].plot()
-plt.title('Accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
 model_path = 'model1.h5'
-loaded_model = keras.models.load_model(model_path)
 
-image = cv2.imread() #Colocar imagem para ler aqui
+if os.path.exists(model_path):
+    loaded_model = tf.keras.models.load_model(model_path)
+    print("Model loaded successfully")
+    loaded_model.evaluate(test_set)
+else:    
+    '''Treinamento em manutenção'''
+    #Treinamento
+    history = classifier.fit(training_set,
+                            epochs = 10,
+                            validation_data = test_set)
 
-image_fromarray - Image.fromarray(image, 'RGB')
-resize_image = image_fromarray.resize((128, 128))
-expand_input = np.expand_dims(resize_image, axis=0)
-input_data = np.array(expand_input)
-input_data = input_data/255
+    classifier.save('model1.h5') #Cria um arquivo do tipo HDF5 para salvar o treinamento
 
-pred = loaded_model.predict(input_data)
-result = pred.argmax()
-result
+    classifier.evaluate(test_set) 
 
-training_set.class_indices
+    pd.DataFrame(history.history)[['loss','val_loss']].plot()
+    plt.title('Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+
+    pd.DataFrame(history.history)[['accuracy','val_accuracy']].plot()
+    plt.title('Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    model_path = 'model1.h5'
+    loaded_model = tf.keras.models.load_model(model_path)
+
+
+image_path = 'media/media/man-threatened.webp'
+
+image = cv2.imread(image_path)
+
+if image is not None:
+    # Convert the OpenCV image to a PIL image
+    image_pil = Image.fromarray(image, 'RGB')
+
+    # Resize the image
+    resized_image = image_pil.resize((128, 128))
+
+    # Expand the dimensions and normalize the input data
+    expanded_input = np.expand_dims(resized_image, axis=0)
+    input_data = expanded_input / 255.0  # Normalize pixel values between 0 and 1
+
+    # Load the trained model
+    model_path = 'model1.h5'
+    loaded_model = tf.keras.models.load_model(model_path)
+
+    # Make predictions
+    predictions = loaded_model.predict(input_data)
+    result = np.argmax(predictions)
+
+    print(f"The predicted class index is: {result}")
+else:
+    print("Image could not be read or does not exist.")
