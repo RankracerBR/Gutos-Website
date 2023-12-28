@@ -16,7 +16,7 @@ import random
 import cv2
 import os
 
-
+##Ajustar treinamento para melhorar a qualidade das imagens
 
 #Função de analisar a imagem
 def view_random_image(target_dir, target_class):
@@ -38,8 +38,8 @@ def view_random_image(target_dir, target_class):
 
 
 #Referência as pastas
-TRAIN_DIR = "Violence_Datasets/train"
-TEST_DIR = "Violence_Datasets/train"
+TRAIN_DIR = "ML_Training/Violence_Datasets/train"
+TEST_DIR = "ML_Training/Violence_Datasets/test"
 BATCH_SIZE = 64
 
 #Conta a quantidade de imagens
@@ -58,7 +58,7 @@ plt.figure(figsize=(10, 10))
 for i in range(18):
     plt.subplot(3, 6, i+1)
     class_name = random.choice(class_names)
-    img = view_random_image(target_dir='Violence_Datasets/train/', target_class=class_name)
+    img = view_random_image(target_dir='ML_Training/Violence_Datasets/train/', target_class=class_name)
 plt.show()
 
 #Preparando para o Treinamento
@@ -107,20 +107,20 @@ classifier.compile(optimizer = 'adam', loss="categorical_crossentropy", metrics 
 classifier.summary()
 
 
-model_path = 'model1.h5'
+model_path = 'ML_Training/model1.h5'
 
 if os.path.exists(model_path):
     loaded_model = tf.keras.models.load_model(model_path)
     print("Model loaded successfully")
     loaded_model.evaluate(test_set)
 else:    
-    '''Treinamento em manutenção'''
+    '''Treinamento'''
     #Treinamento
     history = classifier.fit(training_set,
                             epochs = 10,
                             validation_data = test_set)
 
-    classifier.save('model1.h5') #Cria um arquivo do tipo HDF5 para salvar o treinamento
+    classifier.save('model1.h5')
 
     classifier.evaluate(test_set) 
 
@@ -137,29 +137,41 @@ else:
     loaded_model = tf.keras.models.load_model(model_path)
 
 
-image_path = 'media/media/man-threatened.webp'
 
-image = cv2.imread(image_path)
+# Diretório onde estão as imagens
+directory = 'ML_Training/media/media/'
 
-if image is not None:
-    # Convert the OpenCV image to a PIL image
-    image_pil = Image.fromarray(image, 'RGB')
+# Lista para armazenar os caminhos das imagens
+image_paths = []
 
-    # Resize the image
-    resized_image = image_pil.resize((128, 128))
+# Percorre o diretório em busca de arquivos de imagem
+for filename in os.listdir(directory):
+    if filename.endswith('.webp') or filename.endswith('.png') or filename.endswith('.jpg'):
+        image_paths.append(os.path.join(directory, filename))
 
-    # Expand the dimensions and normalize the input data
-    expanded_input = np.expand_dims(resized_image, axis=0)
-    input_data = expanded_input / 255.0  # Normalize pixel values between 0 and 1
+# Loop sobre cada imagem encontrada
+for image_path in image_paths:
+    image = cv2.imread(image_path)
 
-    # Load the trained model
-    model_path = 'model1.h5'
-    loaded_model = tf.keras.models.load_model(model_path)
+    if image is not None:
+        # Converta a imagem do OpenCV para uma imagem PIL
+        image_pil = Image.fromarray(image, 'RGB')
 
-    # Make predictions
-    predictions = loaded_model.predict(input_data)
-    result = np.argmax(predictions)
+        # Redimensione a imagem
+        resized_image = image_pil.resize((128, 128))
 
-    print(f"The predicted class index is: {result}")
-else:
-    print("Image could not be read or does not exist.")
+        # Expanda as dimensões e normalize os dados de entrada
+        expanded_input = np.expand_dims(resized_image, axis=0)
+        input_data = expanded_input / 255.0  # Normalize os valores de pixel entre 0 e 1
+
+        # Carregue o modelo treinado
+        model_path = 'ML_Training/model1.h5'
+        loaded_model = tf.keras.models.load_model(model_path)
+
+        # Faça previsões
+        predictions = loaded_model.predict(input_data)
+        result = np.argmax(predictions)
+
+        print(f"A classe prevista para {image_path} é: {result}")
+    else:
+        print(f"Não foi possível ler a imagem {image_path} ou a imagem não existe.")
