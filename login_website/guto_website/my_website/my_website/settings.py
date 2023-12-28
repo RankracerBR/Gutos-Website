@@ -144,7 +144,7 @@ STATICFILES_DIRS = [
 
 
 # Media Files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'ML_Training/media')
 MEDIA_URL = '/media/'
 
 # Default primary key field type
@@ -159,4 +159,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'rankracerbr21@gmail.com'
 EMAIL_HOST_PASSWORD = ''
 
-APPEND_SLASH=False
+APPEND_SLASH = False
