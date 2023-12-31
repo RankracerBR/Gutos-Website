@@ -1,7 +1,6 @@
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
-from my_website.core import models
 from datetime import datetime
 import pandas as pd
 import smtplib
@@ -87,7 +86,7 @@ for index, row in df.iterrows():
             data_aviso = row['data_aviso']
             tempo_decorrido = datetime.now() - data_aviso
             if tempo_decorrido >= timedelta(hours=24):
-                banimento = models.Banimento()
+                banimento = core.models.Banimento()
                 banimento.usuario = row['email_do_usuario']
                 banimento.motivo = "Não alteração após aviso de conteúdo ofensivo"
                 banimento.save()

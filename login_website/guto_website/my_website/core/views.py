@@ -68,15 +68,17 @@ def Logout_Usuario(request):
 
 
 '''Executa os arquivos de verificação de palavras'''
-def execute_verification(file_name1, file_name2):
+def execute_verification(file_name1, file_name2, file_name3):
     if platform.system() == "Windows":
         # Se o sistema operacional for Windows
         subprocess.run(['python', file_name1])
         subprocess.run(['python', file_name2])
+        subprocess.run(['python', file_name3])
     elif platform.system() == "Linux":
         # Se o sistema operacional for Linux
         subprocess.run(['python3', file_name1])
         subprocess.run(['python3', file_name2])
+        subprocess.run(['python', file_name3])
     else:
         print("Sistema operacional não suportado")
     
@@ -114,8 +116,9 @@ def Atualizar_Usuario(request):
 
         file_name1 = 'ML_Training/identify_cols.py'
         file_name2 = 'ML_Training/identify_badwords.py'
+        file_name3 = 'ML_Training/identify_imgs.py'
 
-        execute_verification(file_name1,file_name2)
+        execute_verification(file_name1,file_name2,file_name3)
     
         return redirect('pagina_usuario')
 
