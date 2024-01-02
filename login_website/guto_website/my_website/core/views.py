@@ -1,5 +1,5 @@
 #Libs/Modules
-from .models import  Registro, CadastroUsuario, CadastroUsuarioHistorico, Banimento, Post, Comment
+from .models import  Registro, CustomUser, CustomUserManager, Banimento, Post, Comment
 from django.shortcuts import render, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
@@ -18,47 +18,12 @@ import random
 #Functions
 '''Tela de Login'''
 def Login_Usuario(request):
-    if request.method == 'POST':
-        nome = request.POST['nome']
-        email = request.POST['email']
-        senha = request.POST['senha']
-
-        try:
-            # Autentica o usuário
-            usuario = CadastroUsuario.objects.get(complete_name=nome, complete_email=email, complete_password=senha)
-            try:
-                banimento = Banimento.objects.get(usuario=usuario)
-                mensagem_banimento = "Sua conta foi banida por razões específicas"
-                return render(request, 'index.html', {'mensagem_banimento':mensagem_banimento})
-            except Banimento.DoesNotExist:
-                nome = usuario.complete_name
-                imagem = usuario.complete_image
-                descricao = usuario.complete_description
-
-                request.session['nome'] = nome
-                request.session['imagem'] = imagem.url 
-                request.session['descricao'] = descricao
-
-                return redirect('pagina_usuario')
-
-        except CadastroUsuario.DoesNotExist:
-            mensagem_erro = "Credenciais incorretas. Tente novamente."
-            return render(request, 'index.html', {'mensagem_erro':mensagem_erro})
-
-    return render(request, 'index.html')
+    ...
 
 
 '''Página do Usuário'''
-@login_required
 def User_Page(request):
-    nome = request.session.get('nome')
-    imagem = request.session.get('imagem')
-    descricao = request.session.get('descricao')
-
-    if nome is None or imagem is None or descricao is None:
-        return redirect('index')  
-
-    return render(request, 'user_page.html', {'nome': nome, 'imagem': imagem, 'descricao': descricao})
+    ...
 
 
 '''Tela de Logout'''
@@ -88,42 +53,11 @@ def execute_verification(file_name1, file_name2, file_name3):
 '''Atualiza o Perfil do Usuário'''
 @login_required
 def Atualizar_Usuario(request):
-    if request.method == 'POST':
-        nome = request.POST.get('nome')
-        descricao = request.POST.get('descricao')
-        imagem = request.FILES.get('imagem')
-
-        usuario = CadastroUsuario.objects.get(complete_email=request.user.email)
-
-        CadastroUsuarioHistorico.objects.create(
-            usuario=usuario,
-            nome_anterior=usuario.complete_name,
-            descricao_anterior=usuario.complete_description
-        )
-
-        usuario.complete_name = nome
-        usuario.complete_description = descricao
-        if imagem:
-            usuario.complete_image = imagem
-        usuario.save()
-
-        request.session['nome'] = usuario.complete_name
-        request.session['descricao'] = usuario.complete_description
-        if usuario.complete_image:
-            request.session['imagem'] = usuario.complete_image.url
-        else:
-            request.session['imagem'] = None
-
-        file_name1 = 'ML_Training/identify_cols.py'
-        file_name2 = 'ML_Training/identify_badwords.py'
-        file_name3 = 'ML_Training/identify_imgs.py'
-
-        execute_verification(file_name1,file_name2,file_name3)
-    
-        return redirect('pagina_usuario')
+    ...
 
 
 '''Api'''
+@login_required
 def search_images(request):
     if request.method == 'GET':
         query = request.GET.get('q')
@@ -184,37 +118,11 @@ def verify(request, token):
 
 '''Registra o usuário'''
 def CadastroUsuario_1(request):
-    message = 'Email já registrado'
     if request.method == 'POST':
-        complete_name = request.POST.get('complete_name')
-        complete_email = request.POST.get('complete_email')
-        complete_password = request.POST.get('complete_password')
-        complete_image = request.FILES.get('complete_image')
-        complete_description = request.POST.get('complete_description')
-        
-        if CadastroUsuario.objects.filter(complete_email=complete_email).exists():
-            return render(request, 'register_account.html', {'message':message})
-        
-        usuario = CadastroUsuario(
-            complete_name=complete_name,
-            complete_email=complete_email,
-            complete_password=complete_password,
-            complete_image=complete_image,
-            complete_description=complete_description
-        )
-        
-        usuario.save()
-        
-        file_name1 = 'ML_Training/identify_cols.py'
-        file_name2 = 'ML_Training/identify_badwords.py'
-
-        execute_verification(file_name1,file_name2)
-        
-        return render(request, 'sucess.html')
-    
-    return render(request, 'register_account.html')
+        form = Cus
 
 
+'''
 #Development
 @login_required
 def create_post(request):
@@ -230,8 +138,10 @@ def create_post(request):
         form = PostForm()
     posts = Post.objects.all()
     return render(request, 'posts.html', {'form': form, 'posts': posts})
+'''
 
 
+'''
 @login_required
 def create_comment(request, post_id):
     post = Post.objects.get(id=post_id)
@@ -245,3 +155,6 @@ def create_comment(request, post_id):
     else:
         form = CommentForm()
     return render(request, 'posts.html', {'form': form, 'post': post})
+
+'''
+
