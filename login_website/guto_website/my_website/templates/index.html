@@ -12,17 +12,11 @@
     <center>
     <h1>Login</h1>
     <div id="form" >
-    <form method="post" action="{% url 'index' %}">
-        {% csrf_token %}
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required>
-        
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" required>
-        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+        </form>
         <button type="submit">Entrar</button>
     </form>
     {% csrf_token %}

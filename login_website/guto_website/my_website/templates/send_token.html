@@ -14,10 +14,10 @@
 <body>
     <center>
     {% block content %}
-    <form action="" method='POST'>
+    <form action="{% url 'send_token' %}" method="POST">
         {% csrf_token %}
         {{ form.as_p }} 
-        <input clas="btn btn-primary" type="submit" value="Submit">
+        <input class="btn btn-primary" type="submit" value="Submit">
     </form>
 {% endblock %}
 </center>

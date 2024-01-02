@@ -12,23 +12,9 @@
 
 <body>
     <center>
-        <form method="post" action="{% url 'register_user' %}" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <label for="complete_name">Nome completo:</label>
-            <input type="text" name="complete_name" required>
-            <br>
-            <label for="complete_email">E-mail:</label>
-            <input type="email" name="complete_email" required>
-            <br>
-            <label for="complete_email">Imagem do seu Perfil</label>
-            <input type="file" name="complete_image" accept='image/*' required>
-            <br>
-            <label for="complete_email">Sua descrição:</label>
-            <textarea id="description" name="complete_description" rows="4" cols="50"></textarea>
-            <br>
-            <label for="complete_password">Senha:</label>
-            <input type="password" name="complete_password" required>
-            <br>
+            {{ form.as_p }}
             <input type="submit" value="Cadastrar">
         </form>
         {% if message %}
@@ -38,5 +24,4 @@
         {% endif %}
     </center>
 </body>
-
 </html>

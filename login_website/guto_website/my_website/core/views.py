@@ -1,12 +1,12 @@
 #Libs/Modules
-from .models import  Registro, CustomUser, CustomUserManager, Banimento, Post, Comment
+from .models import  Register
 from django.shortcuts import render, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
 from ML_Training import identify_words_content as idc
-from .forms import RegistroForm, PostForm, CommentForm
+from .forms import RegisterForm, RegistrationForm, LoginForm
 from django.core.mail import send_mail
-from django.contrib.auth import logout
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.conf import settings
 import subprocess
@@ -17,8 +17,19 @@ import random
 
 #Functions
 '''Tela de Login'''
-def Login_Usuario(request):
-    ...
+def Login_user(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(request, email=email, password=password)
+            if user is not None:
+                login(request,user)
+                return redirect('user_page')
+    else:
+        form = LoginForm()
+    return render(request, 'index.html', {'form':form})
 
 
 '''Página do Usuário'''
@@ -27,13 +38,13 @@ def User_Page(request):
 
 
 '''Tela de Logout'''
-def Logout_Usuario(request):
+def Logout_User(request):
     logout(request)
     return redirect('index')
 
 
 '''Executa os arquivos de verificação de palavras'''
-def execute_verification(file_name1, file_name2, file_name3):
+def Execute_verification(file_name1, file_name2, file_name3):
     if platform.system() == "Windows":
         # Se o sistema operacional for Windows
         subprocess.run(['python', file_name1])
@@ -58,7 +69,7 @@ def Atualizar_Usuario(request):
 
 '''Api'''
 @login_required
-def search_images(request):
+def Search_images(request):
     if request.method == 'GET':
         query = request.GET.get('q')
         
@@ -83,44 +94,48 @@ def search_images(request):
 
 '''Registro para envio do formulário'''
 def Registration_Token(request):
-    form = RegistroForm()
     if request.method == 'POST':
-        username = request.POST.get('name')
-        email = request.POST.get('email')
-        user = Registro(nome=username, email=email)
-        
-        domain_name = get_current_site(request).domain
-        token = str(random.random()).split('.')[1]
-        user.token = token
-        
-        link = f'http://{domain_name}/verify/{token}'        
-        
-        send_mail(
-            'Verificação de Email',
-            f'Clique para completar seu cadastro : {link}',
-            settings.EMAIL_HOST_USER,
-            [email],
-            fail_silently=False,
-        )
-        return HttpResponse('Verique a caixa de entrada do seu email para confirmar')
-        
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_verified = False  # Assuming initially it's not verified
+            user.token = str(random.random()).split('.')[1]
+            user.save()
+
+            domain_name = get_current_site(request).domain
+            link = f'http://{domain_name}/verify/{user.token}'        
+            send_mail(
+                'Verificação de Email',
+                f'Clique para completar seu cadastro: {link}',
+                settings.EMAIL_HOST_USER,
+                [user.email],
+                fail_silently=False,
+            )
+            return HttpResponse('Verifique a caixa de entrada do seu email para confirmar')
+    else:
+        form = RegisterForm()
     return render(request, 'send_token.html', {'form': form})
 
-"Redireciona a página quando o usuário clica no token"
-def verify(request, token):
+
+def Verify(request, token):
     try:
-        user = Registration_Token.objects.filter(token = token)
-        if user:
-            user.is_verified = True
-        return redirect('index')
-    except Exception:
+        user = Register.objects.get(token=token)
+        user.is_verified = True
+        user.save()
+        return redirect('index')  # Redirect to your desired view after successful verification
+    except Register.DoesNotExist:
         return render(request, 'register_account.html')
 
 '''Registra o usuário'''
-def CadastroUsuario_1(request):
+def Register_user(request):
     if request.method == 'POST':
-        form = Cus
-
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('')
+    else:
+        form = RegistrationForm()
+    return render(request, 'register_account.html', {'form':form})
 
 '''
 #Development
