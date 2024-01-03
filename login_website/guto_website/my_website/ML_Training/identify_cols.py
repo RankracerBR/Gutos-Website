@@ -1,6 +1,7 @@
+from pymongo import MongoClient
 import pandas as pd
 import sqlite3
-from pymongo import MongoClient
+
 
 # Conecte-se ao arquivo SQLite
 conn = sqlite3.connect('db.sqlite3')

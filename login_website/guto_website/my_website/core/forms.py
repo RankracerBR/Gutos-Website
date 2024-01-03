@@ -10,6 +10,7 @@ class RegisterForm(forms.ModelForm):
         model = Register
         fields = ('name','email')
 
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(label="Email")
     description = forms.CharField(label="Descrição", widget=forms.Textarea)
@@ -18,3 +19,9 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'image','description']
+
+
+class CustomUserChangeForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'description', 'image']

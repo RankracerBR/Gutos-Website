@@ -1,7 +1,7 @@
-from .models import CustomUser
-from django.http import HttpResponse
 from django.contrib.auth.admin import UserAdmin
+from django.http import HttpResponse
 from django.contrib import admin
+from .models import CustomUser
 import unicodedata
 import csv
 

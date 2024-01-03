@@ -1,16 +1,16 @@
 #Libs/Modules
-from .models import  Register
-from django.shortcuts import render, redirect
+from .forms import RegisterForm, CustomUserCreationForm, CustomUserChangeForm
+from django.contrib.auth import authenticate, login , logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
-from ML_Training import identify_words_content as idc
-from .forms import RegisterForm, CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
+from ML_Training import identify_words_content as idc
+from django.shortcuts import render, redirect
 from django.core.mail import send_mail
-from django.contrib.auth import authenticate, login , logout, get_user_model
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from django.contrib import messages
 from django.conf import settings
+from .models import  Register
 import subprocess
 import requests
 import platform
@@ -18,7 +18,7 @@ import random
 
 
 #Functions
-'''Tela de Login'''
+'''Login page'''
 def Login_user(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
@@ -35,15 +35,16 @@ def Login_user(request):
     return render(request, 'index.html', {'form': form})
 
 
-'''Página do Usuário'''
+'''User page'''
 @login_required
 def User_page(request):
     user = request.user
     return render(request, 'user_page.html', {'user':user})
 
 
-'''Tela de Logout'''
-def Logout_User(request):
+'''Logout function'''
+@login_required
+def Logout_user(request):
     logout(request)
     return redirect('index')
 
@@ -63,12 +64,19 @@ def Execute_verification(file_name1, file_name2, file_name3):
     else:
         print("Sistema operacional não suportado")
     
-    #Chamar arquivo identify_imgs.py
 
-
-'''Atualiza o Perfil do Usuário'''
-def Atualizar_Usuario(request):
-    ...
+'''Update the profile'''
+@login_required
+def Update_user(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_page')  # Redirecione para a página do usuário após a atualização
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+    
+    return render(request, 'alter_user.html', {'form': form})
 
 
 '''Api'''
@@ -91,11 +99,12 @@ def Search_images(request):
             print(result)
             
             return render(request, 'user_page.html', {'results': data.get('items', []),
-                                                      'nome': request.session.get('nome'),
-                                                      'imagem': request.session.get('imagem'),
-                                                      'descricao': request.session.get('descricao')}) #Corrige o bug de sumir com a imagem do usuário
+                                                      'name': request.session.get('name'),
+                                                      'image': request.session.get('image'),
+                                                      'description': request.session.get('description')}) #Corrige o bug de sumir com a imagem do usuário
 
-'''Registro para envio do formulário'''
+
+'''Send the email of the form to the user'''
 def Registration_Token(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -120,17 +129,18 @@ def Registration_Token(request):
     return render(request, 'send_token.html', {'form': form})
 
 
+'''Verification'''
 def Verify(request, token):
     try:
         user = Register.objects.get(token=token)
         user.is_verified = True
         user.save()
-        return redirect('index')  # Redirect to your desired view after successful verification
+        return redirect('register_account')
     except Register.DoesNotExist:
         return render(request, 'register_account.html')
 
 
-'''Registra o usuário'''
+'''Register the user'''
 def Register_user(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST,request.FILES)
@@ -138,6 +148,7 @@ def Register_user(request):
             user = form.save(commit=False)
             user.status = 'regular'  # Defina o status padrão aqui
             user.save()
+            messages.success(request, 'Usuário cadastrado com sucesso! Faça o login para acessar.')
             return redirect('index')  # Redirecionar para a página de login após o registro
     else:
         form = CustomUserCreationForm()

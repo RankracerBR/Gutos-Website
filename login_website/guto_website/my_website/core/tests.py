@@ -1,10 +1,10 @@
-from .models import CadastroUsuario
 from unittest.mock import MagicMock
 from django.test import TestCase
+from .models import CustomUser
 from core import views
 import unittest
 
-####################################################
+
 #Run the verification with python manage.py test
 # Create your tests here.
 
@@ -19,7 +19,7 @@ class TestSearchImages(unittest.TestCase):
             mocked_get.return_value.json.return_value = {
                 'items': ['image1', 'image2']
             }
-            result = views.search_images(request)
+            result = views.Search_images(request)
             self.assertIsNotNone(result)
             # Adicione mais asserções para verificar se o comportamento é o esperado
 
@@ -28,8 +28,8 @@ class TestSearchImages(unittest.TestCase):
         request.method = 'GET'
         request.GET.get.return_value = None  # Simula nenhuma query
 
-        result = views.search_images(request)
+        result = views.Search_images(request)
         self.assertIsNone(result)
         
 ##Depois fazer testes no front-end
-####################################################        
+

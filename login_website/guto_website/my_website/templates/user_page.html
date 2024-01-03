@@ -5,12 +5,13 @@
     <title>Sua página</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
-    <a href="">Sair</a>
+    <a href="{% url 'index' %}">Sair</a>
     <h1>Esta é sua página</h1>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <a href="">Posts</a>
+    <a href="{% url 'logout' %}">Posts</a>
+    <a href="{% url 'update_user' %}">Alterar Perfil</a>
 </head>
 
 <body>
@@ -19,22 +20,6 @@
         <img src="{{ user.image.url }}" alt="Imagem do usuário" width="200px" height="200px">
         <p id="descricao">{{ user.description }}</p>
     </center>
-    <button id="mostrarOpcoes">Mostrar Opções de Alteração</button>
-    <div id="opcoesAlteracao" style="display: none;">
-    <form id="atualizar-form" method="post" action="" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="text" name="nome" value="{{ user.name }}">
-        <textarea name="descricao">{{ descricao }}</textarea>
-        <input type="file" name="imagem">
-        <input type="submit" value="Atualizar Dados" id="botao_atualizar">
-        <div id="loading" style="display: none;">
-            Carregando...
-        </div>
-        <script src="{% static 'js/animation.js'%}"></script>
-    </form>
-    </div>
-    <div id="mensagem"></div>
-    <script src="{% static 'js/alter_info.js' %}"></script>
     <br>
     </br>
     <h2>Não sabe qual imagem de perfil escolher? digite aqui em baixo</h2>
@@ -55,6 +40,20 @@
         </div>
             {% endif %}
     <script src="{% static 'js/api_form.js'%}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('mostrarOpcoes').addEventListener('click', function () {
+                var opcoes = document.getElementById('opcoesAlteracao');
+                if (opcoes.style.display === 'none' || opcoes.style.display === '') {
+                    opcoes.style.display = 'block';
+                } else {
+                    opcoes.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>
