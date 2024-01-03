@@ -5,25 +5,25 @@
     <title>Sua página</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
-    <a href="{% url 'logout' %}">Sair</a>
+    <a href="">Sair</a>
     <h1>Esta é sua página</h1>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <a href="{% url 'create_post' %}">Posts</a>
+    <a href="">Posts</a>
 </head>
 
 <body>
     <center>
-        <h1>Bem-vindo {{ nome }}</h1>
-        <img src="{{ imagem }}" alt="Imagem do usuário" width="200px" height="200px">
-        <p id="descricao">{{ descricao }}</p>
+        <h1>Bem-vindo {{ user.username }}</h1>
+        <img src="{{ user.image.url }}" alt="Imagem do usuário" width="200px" height="200px">
+        <p id="descricao">{{ user.description }}</p>
     </center>
     <button id="mostrarOpcoes">Mostrar Opções de Alteração</button>
     <div id="opcoesAlteracao" style="display: none;">
-    <form id="atualizar-form" method="post" action="{% url 'Atualizar_Usuario' %}" enctype="multipart/form-data">
+    <form id="atualizar-form" method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" name="nome" value="{{ nome }}">
+        <input type="text" name="nome" value="{{ user.name }}">
         <textarea name="descricao">{{ descricao }}</textarea>
         <input type="file" name="imagem">
         <input type="submit" value="Atualizar Dados" id="botao_atualizar">
@@ -38,7 +38,7 @@
     <br>
     </br>
     <h2>Não sabe qual imagem de perfil escolher? digite aqui em baixo</h2>
-    <form method="get" action="{% url 'search_images'%}">
+    <form method="get" action="">
         {% csrf_token %}
         <input type="text" name="q" placeholder="Pesquise sua imagem">
         <button type="submit">Pesquisar</button>

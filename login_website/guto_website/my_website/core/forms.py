@@ -1,6 +1,6 @@
 '''Criação do formulário para registro'''
 from django.contrib.auth.forms import UserCreationForm
-from .models import Register, User
+from .models import Register, CustomUser
 from django import forms
 
 
@@ -10,14 +10,11 @@ class RegisterForm(forms.ModelForm):
         model = Register
         fields = ('name','email')
 
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(label="Email")
+    description = forms.CharField(label="Descrição", widget=forms.Textarea)
+    image = forms.ImageField(label="Imagem do Perfil", required=False)
 
-class RegistrationForm(UserCreationForm):
     class Meta:
-        model = User
-        fields = ('email', 'name', 'password')
-
-
-class LoginForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput())
-
+        model = CustomUser
+        fields = ['username', 'email', 'image','description']

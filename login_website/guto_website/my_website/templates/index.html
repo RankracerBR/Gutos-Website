@@ -7,19 +7,15 @@
     <link rel="stylesheet" type="text/css" href={% static "css/style.css" %}>
     <a class="register" href="{% url 'send_token' %}">Clique aqui para registrar sua conta</a>
 </head>
-
 <body>
     <center>
-    <h1>Login</h1>
+    <h1>Página de Login</h1>
     <div id="form" >
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Login</button>
         </form>
-        <button type="submit">Entrar</button>
-    </form>
-    {% csrf_token %}
     {% if mensagem_erro %}
         <p>{{ mensagem_erro }}</p>
     {% endif %}
@@ -29,5 +25,4 @@
     </center>
     </div>
 </body>
-
 </html>

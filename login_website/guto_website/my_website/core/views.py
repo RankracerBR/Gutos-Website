@@ -4,9 +4,11 @@ from django.shortcuts import render, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
 from ML_Training import identify_words_content as idc
-from .forms import RegisterForm, RegistrationForm, LoginForm
+from .forms import RegisterForm, CustomUserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login , logout, get_user_model
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.conf import settings
 import subprocess
@@ -19,22 +21,25 @@ import random
 '''Tela de Login'''
 def Login_user(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
+        form = AuthenticationForm(request, request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
+            email = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
+            user = authenticate(request, username=email, password=password)
+
             if user is not None:
-                login(request,user)
+                login(request, user)
                 return redirect('user_page')
     else:
-        form = LoginForm()
-    return render(request, 'index.html', {'form':form})
+        form = AuthenticationForm()
+    return render(request, 'index.html', {'form': form})
 
 
 '''Página do Usuário'''
-def User_Page(request):
-    ...
+@login_required
+def User_page(request):
+    user = request.user
+    return render(request, 'user_page.html', {'user':user})
 
 
 '''Tela de Logout'''
@@ -62,13 +67,11 @@ def Execute_verification(file_name1, file_name2, file_name3):
 
 
 '''Atualiza o Perfil do Usuário'''
-@login_required
 def Atualizar_Usuario(request):
     ...
 
 
 '''Api'''
-@login_required
 def Search_images(request):
     if request.method == 'GET':
         query = request.GET.get('q')
@@ -126,16 +129,19 @@ def Verify(request, token):
     except Register.DoesNotExist:
         return render(request, 'register_account.html')
 
+
 '''Registra o usuário'''
 def Register_user(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
+        form = CustomUserCreationForm(request.POST,request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('')
+            user = form.save(commit=False)
+            user.status = 'regular'  # Defina o status padrão aqui
+            user.save()
+            return redirect('index')  # Redirecionar para a página de login após o registro
     else:
-        form = RegistrationForm()
-    return render(request, 'register_account.html', {'form':form})
+        form = CustomUserCreationForm()
+    return render(request, 'register_account.html', {'form': form})
 
 '''
 #Development
