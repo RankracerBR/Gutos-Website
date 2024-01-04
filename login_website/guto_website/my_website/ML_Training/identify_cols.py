@@ -1,30 +1,17 @@
-from pymongo import MongoClient
 import pandas as pd
 import sqlite3
 
-
-# Conecte-se ao arquivo SQLite
+# Conectar-se ao banco de dados SQLite
 conn = sqlite3.connect('db.sqlite3')
 
-# Execute uma consulta SQL para extrair os dados que você deseja converter em CSV
 query = """
-SELECT
-    h.nome_anterior,
-    h.descricao_anterior,
-    h.data_atualizacao,
-    u.complete_email as email_do_usuario
-FROM CadastroUsuarioHistorico h
-JOIN CadastroUsuario u ON h.usuario_id = u.id
+SELECT * FROM core_customuser
 """
 
-# Use o Pandas para ler os dados do SQLite em um DataFrame
 df = pd.read_sql_query(query, conn)
 
-# Feche a conexão com o arquivo SQLite
 conn.close()
 
-
-# Salve o DataFrame como um arquivo CSV
 df.to_csv('ML_Training/Users_csv/dados_usuarios.csv', index=False)
 
 '''

@@ -68,14 +68,17 @@ def Execute_verification(file_name1, file_name2, file_name3):
 '''Update the profile'''
 @login_required
 def Update_user(request):
+    file_name1 = 'ML_Training/identify_cols.py'
+    file_name2 = 'ML_Training/identify_badwords.py'
+    file_name3 = 'ML_Training/identify_imgs.py'
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
+            Execute_verification(file_name1, file_name2, file_name3)
             return redirect('user_page')  # Redirecione para a página do usuário após a atualização
     else:
         form = CustomUserChangeForm(instance=request.user)
-    
     return render(request, 'alter_user.html', {'form': form})
 
 
@@ -153,40 +156,3 @@ def Register_user(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'register_account.html', {'form': form})
-
-'''
-#Development
-@login_required
-def create_post(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            user = CadastroUsuario.objects.get(id=request.user.id)
-            title = form.cleaned_data['title']
-            content = form.cleaned_data['content']
-            post = Post.objects.create(author=user, title=title, content=content)
-            return redirect('create_post')
-    else:
-        form = PostForm()
-    posts = Post.objects.all()
-    return render(request, 'posts.html', {'form': form, 'posts': posts})
-'''
-
-
-'''
-@login_required
-def create_comment(request, post_id):
-    post = Post.objects.get(id=post_id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            user = CadastroUsuario.objects.get(id=request.user.id)
-            content = form.cleaned_data['content']
-            comment = Comment.objects.create(user=user, title=post, content=content)
-            return redirect('create_post')  # Redirecionar para a página de posts após a criação do comentário
-    else:
-        form = CommentForm()
-    return render(request, 'posts.html', {'form': form, 'post': post})
-
-'''
-

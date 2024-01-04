@@ -16,17 +16,11 @@
       {{ form.as_p }}
       <button type="submit">Enviar Post</button>
   </form>
-
-  <!-- Iterar sobre os posts existentes -->
   {% for post in posts %}
       <div>
           <h3>{{ post.title }}</h3>
           <p>{{ post.content }}</p>
-
-          <!-- Botão para revelar o formulário de comentário -->
           <button onclick="toggleCommentForm('{{ post.id }}')">Adicionar Comentário</button>
-
-          <!-- Formulário de comentário oculto por padrão -->
           <form id="commentForm-{{ post.id }}" method="post" action="{% url 'create_comment' post.id %}" style="display: none;">
               {% csrf_token %}
               <label for="comment">Adicionar Comentário:</label><br>
@@ -36,7 +30,6 @@
               <button type="submit">Enviar Comentário</button>
           </form>
 
-          <!-- Exibir os comentários existentes para o post -->
           <ul>
               {% for comment in post.comment_set.all %}
                   <li>{{ comment.content }}</li>
@@ -44,8 +37,6 @@
           </ul>
       </div>
   {% endfor %}
-
-  <!-- Script para exibir/ocultar formulário de comentário -->
   <script>
       function toggleCommentForm(postId) {
           var commentForm = document.getElementById('commentForm-' + postId);

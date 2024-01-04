@@ -1,11 +1,8 @@
 from keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
 from tensorflow import keras
-from keras.layers import MaxPooling2D
 from keras.models import Sequential
-from keras.layers import Flatten
-from keras.layers import Conv2D
-from keras.layers import Dense
+from keras.layers import Flatten, Conv2D, Dense, MaxPooling2D
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -15,6 +12,7 @@ import glob as gb
 import random
 import cv2
 import os
+
 
 ##Ajustar treinamento para melhorar a qualidade das imagens
 
@@ -59,7 +57,7 @@ for i in range(18):
     plt.subplot(3, 6, i+1)
     class_name = random.choice(class_names)
     img = view_random_image(target_dir='ML_Training/Violence_Datasets/train/', target_class=class_name)
-plt.show()
+
 
 #Preparando para o Treinamento
 train_datagen = ImageDataGenerator(rescale = 1./255,

@@ -1,94 +1,59 @@
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime, timedelta
 from email.mime.text import MIMEText
-from datetime import datetime
 import pandas as pd
 import smtplib
 
-#Critérios
-total_palavras_ofensivas = 0
+# Define o critério de palavras ofensivas e limite
+marked_phrases = ['Caralho', 'krl', 'Porra', 'BCT', 'Buceta', 'pqp', 'Cacete', 'putaquepariu', 'puta que pariu', 'porra', 'kct', 'meu pau']
+marked_phrases = [str(phrase) for phrase in marked_phrases]
 limite_palavras_ofensivas = 2
 
-total_nomes_ofensivos = 0
-limite_nomes_ofensivos = 2
-
-#Verificador
-def identify_marked_phrases(text):
+# Função para identificar palavras ofensivas
+def Identify_marked_phrases(text):
     count = 0
-    for phrase in marked_phrases:
-        count += text.lower().count(phrase.lower())
+    if isinstance(text, str):
+        for phrase in marked_phrases:
+            count += text.lower().count(phrase.lower())
     return count
 
-# Função para enviar um e-mail de aviso
-def enviar_email_aviso(destinatario, assunto, mensagem):
+# Função para enviar e-mail de aviso
+def Send_email_warn(destinatario, assunto, mensagem):
     # Configuração do servidor SMTP do Gmail ou do seu provedor de e-mail
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
+    remetente = "rankracerbr21@gmail.com"  # Insira seu e-mail aqui
+    senha = "pexqzhwcosqimbbf"  # Insira sua senha aqui
 
-    # Substitua pelo seu endereço de e-mail e senha
-    remetente = "rankracerbr21@gmail.com"
-    senha = ""
-
-    # Crie um objeto SMTP
+    # Conecta ao servidor SMTP
     server = smtplib.SMTP(smtp_server, smtp_port)
-
-    # Inicie a conexão com o servidor
     server.starttls()
-
-    # Faça login na conta do remetente
     server.login(remetente, senha)
 
-    # Crie a mensagem
+    # Cria a mensagem
     msg = MIMEMultipart()
     msg["From"] = remetente
     msg["To"] = destinatario
     msg["Subject"] = assunto
-
-    # Adicione o corpo da mensagem
     msg.attach(MIMEText(mensagem, "plain"))
 
-    # Envie a mensagem
+    # Envia a mensagem
     server.sendmail(remetente, destinatario, msg.as_string())
-
-    # Encerre a conexão com o servidor
     server.quit()
 
-#Lê o arquivo
+# Carrega os dados dos usuários
 df = pd.read_csv('ML_Training/Users_csv/dados_usuarios.csv')
 
-#Palavras proibidas
-marked_phrases = ['Caralho','krl','Porra','BCT','Buceta','pqp','Cacete','putaquepariu','puta que pariu','porra','kct','meu pau']
+# Verifica palavras ofensivas nos campos 'username' e 'description'
+df['marked_words'] = df['username'].apply(Identify_marked_phrases)
+df['marked_names'] = df['description'].apply(Identify_marked_phrases)
 
-#Verifica Nome e Descrição anterior
-df['marked_words'] = df['descricao_anterior'].apply(identify_marked_phrases)
-df['marked_names'] = df['nome_anterior'].apply(identify_marked_phrases)
-
-df['data_aviso'] = None
-
-#Converte para .csv os dados
-df.to_csv('ML_Training/Users_csv/dados_usuarios_com_palavras_alvo.csv', index=False)
-
-#Faz a soma das palavras
-total_palavras_ofensivas = df['marked_words'].sum()
-total_nomes_ofensivos = df['marked_names'].sum()
-
-#Analisa se o somatório das colunas é maior que o limite e então manda o email caso ultrapasse
+# Analisa se ultrapassa o limite e envia e-mail de aviso
 for index, row in df.iterrows():
-    if row['marked_words'] >= limite_palavras_ofensivas or row['marked_names'] >= limite_nomes_ofensivos:
-        destinatario = row['email_do_usuario']
+    if row['marked_words'] >= limite_palavras_ofensivas or row['marked_names'] >= limite_palavras_ofensivas:
+        destinatario = row['email']
         assunto = "Aviso: Conteúdo ofensivo detectado"
-        if row['data_aviso'] is None:
-            row['data_aviso'] = datetime.now()
-            mensagem = f"Prezado usuário,\n\nDetectamos palavras ofensivas em seu texto. Por favor, reveja e edite o conteúdo.\n\nAtenciosamente,\nEquipe do Guto."
-            enviar_email_aviso(destinatario, assunto, mensagem)
+        mensagem = f"Prezado usuário,\n\nDetectamos palavras ofensivas em seu texto. Por favor, reveja e edite o conteúdo.\n\nAtenciosamente,\nEquipe do Guto."
+        Send_email_warn(destinatario, assunto, mensagem)
 
-        else:
-            data_aviso = row['data_aviso']
-            tempo_decorrido = datetime.now() - data_aviso
-            if tempo_decorrido >= timedelta(hours=24):
-                banimento = core.models.Banimento()
-                banimento.usuario = row['email_do_usuario']
-                banimento.motivo = "Não alteração após aviso de conteúdo ofensivo"
-                banimento.save()
-
-print(f"Total de palavras ofensivas: {total_palavras_ofensivas}")
+# Salva o DataFrame atualizado
+df.to_csv('ML_Training/Users_csv/dados_usuarios_com_palavras_alvo.csv', index=False)
