@@ -99,7 +99,11 @@ DATABASES = {
 }
 '''
 
-
+OBSERVED_FIELDS = {
+    'core.CustomUser': (
+        'username', 'email', 'status', 'description', 'image',
+    ),
+}
 
 
 # Password validation

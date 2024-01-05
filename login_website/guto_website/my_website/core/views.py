@@ -10,7 +10,7 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.contrib import messages
 from django.conf import settings
-from .models import  Register
+from .models import  Register, CustomUser, UserProfileHistory
 import subprocess
 import requests
 import platform
@@ -74,9 +74,23 @@ def Update_user(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
+            old_user = CustomUser.objects.get(pk=request.user.pk)
             form.save()
+
+            if (
+                old_user.last_name != request.user.last_name or
+                old_user.description != request.user.description or
+                old_user.image != request.user.image
+            ):
+                UserProfileHistory.objects.create(
+                    user=request.user,
+                    last_name=old_user.last_name,
+                    description=old_user.description,
+                    image=old_user.image
+                )
+
             Execute_verification(file_name1, file_name2, file_name3)
-            return redirect('user_page')  # Redirecione para a página do usuário após a atualização
+            return redirect('user_page')
     else:
         form = CustomUserChangeForm(instance=request.user)
     return render(request, 'alter_user.html', {'form': form})
@@ -149,10 +163,10 @@ def Register_user(request):
         form = CustomUserCreationForm(request.POST,request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
-            user.status = 'regular'  # Defina o status padrão aqui
+            user.status = 'regular'
             user.save()
             messages.success(request, 'Usuário cadastrado com sucesso! Faça o login para acessar.')
-            return redirect('index')  # Redirecionar para a página de login após o registro
+            return redirect('index') 
     else:
         form = CustomUserCreationForm()
     return render(request, 'register_account.html', {'form': form})

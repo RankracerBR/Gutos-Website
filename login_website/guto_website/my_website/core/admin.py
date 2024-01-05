@@ -1,14 +1,14 @@
-from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, UserProfileHistory
 from django.http import HttpResponse
 from django.contrib import admin
-from .models import CustomUser
-import unicodedata
 import csv
+
 
 # Register your models here.
 #Criar um action para mandar para o RDS da AWS
 
-class CustomUserAdmin(UserAdmin):
+@admin.register(CustomUser)
+class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'status', 'description', 'image')
     list_filter = ('username', 'email', 'status', 'description', 'image')
     fieldsets = (
@@ -28,4 +28,54 @@ class CustomUserAdmin(UserAdmin):
     display_image.allow_tags = True
     display_image.short_description = 'Imagem'
 
-admin.site.register(CustomUser, CustomUserAdmin)
+
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="usuarios.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['Username','Email', 'Status','Description'])
+
+        for user in queryset:
+            writer.writerow([
+                user.username,
+                user.email,
+                user.status,
+                user.description
+            ])
+        
+        return response
+        
+    export_to_csv.short_description = 'Exportar para CSV'
+    actions = ['export_to_csv']
+
+
+@admin.register(UserProfileHistory)
+class UserProfileHistoryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'description', 'image', 'timestamp')
+    list_filter = ('user','description', 'timestamp')
+
+
+    def has_add_permission(self, request):
+        return False
+
+    
+    def export_to_csv(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="usuarios.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['Username', 'Status','Description'])
+
+        for user in queryset:
+            writer.writerow([
+                user.user,
+                user.email,
+                user.status,
+                user.description
+            ])
+        
+        return response
+        
+    export_to_csv.short_description = 'Exportar para CSV'
+    actions = ['export_to_csv']

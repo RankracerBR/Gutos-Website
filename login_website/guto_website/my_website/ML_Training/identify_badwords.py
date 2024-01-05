@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 import pandas as pd
 import smtplib
 
-# Define o critério de palavras ofensivas e limite
+
 marked_phrases = ['Caralho', 'krl', 'Porra', 'BCT', 'Buceta', 'pqp', 'Cacete', 'putaquepariu', 'puta que pariu', 'porra', 'kct', 'meu pau']
 marked_phrases = [str(phrase) for phrase in marked_phrases]
 limite_palavras_ofensivas = 2
@@ -16,13 +16,11 @@ def Identify_marked_phrases(text):
             count += text.lower().count(phrase.lower())
     return count
 
-# Função para enviar e-mail de aviso
 def Send_email_warn(destinatario, assunto, mensagem):
-    # Configuração do servidor SMTP do Gmail ou do seu provedor de e-mail
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
-    remetente = "rankracerbr21@gmail.com"  # Insira seu e-mail aqui
-    senha = "pexqzhwcosqimbbf"  # Insira sua senha aqui
+    remetente = "rankracerbr21@gmail.com"
+    senha = "pexqzhwcosqimbbf" 
 
     # Conecta ao servidor SMTP
     server = smtplib.SMTP(smtp_server, smtp_port)

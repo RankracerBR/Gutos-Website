@@ -12,7 +12,9 @@ urlpatterns = [
     path('registrar_conta/', views.Register_user, name='register_account'),
     path('pagina_usuario/', views.User_page, name='user_page'),
     path('update_user/', views.Update_user, name="update_user"),
-    path('logout', views.Logout_user, name="logout")
+    path('logout', views.Logout_user, name="logout"),
+    path('pesquisa_imagens', views.Search_images, name='search_images'),
+    re_path(r'^.*/$', views.Login_user, name ='catch_all')
 ]
 
 if settings.DEBUG:

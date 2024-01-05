@@ -22,7 +22,7 @@
     <br>
     </br>
     <h2>Não sabe qual imagem de perfil escolher? digite aqui em baixo</h2>
-    <form method="get" action="">
+    <form method="get" action="{% url 'search_images' %}">
         {% csrf_token %}
         <input type="text" name="q" placeholder="Pesquise sua imagem">
         <button type="submit">Pesquisar</button>

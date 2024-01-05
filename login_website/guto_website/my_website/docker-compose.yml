@@ -15,6 +15,7 @@ services:
         python -m pip install keras
         python -m pip install matplotlib
         python -m pip install opencv-python
+        python -m pip install django-simple-history
         python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
