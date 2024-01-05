@@ -1,7 +1,7 @@
 <h1>Projeto: Gutos Website</h1>
 <h2>Principais Tecnologias</h2>
 <ls>
-    <ul>Python(Django, TDD, Data Science, Machile Learning)<img alt="rankracerbr-phyton" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg"></ul>
+    <ul>Python(Django, Unit Test, Data Science, Machile Learning)<img alt="rankracerbr-phyton" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg"></ul>
     <ul>HTML<img alt="rankracerbr-c++" height="33" width="35" src="https://logodownload.org/wp-content/uploads/2016/10/html5-logo-10.png"></ul>
     <ul>CSS <img alt="rankracerbr-c++" height="35" width="39" src="https://logospng.org/download/css-3/logo-css-3-2048.png"></ul>
     <ul>Javascript <img alt="rankracerbr-Js" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-plain.svg"></ul>
