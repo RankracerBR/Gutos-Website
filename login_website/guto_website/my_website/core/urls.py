@@ -14,7 +14,7 @@ urlpatterns = [
     path('update_user/', views.Update_user, name="update_user"),
     path('logout', views.Logout_user, name="logout"),
     path('pesquisa_imagens', views.Search_images, name='search_images'),
-    re_path(r'^.*/$', views.Login_user, name ='catch_all')
+    re_path(r'^\d+/$', views.Login_user, name='catch_all')
 ]
 
 if settings.DEBUG:

@@ -1,5 +1,6 @@
 #Libs/Modules
 from .forms import RegisterForm, CustomUserCreationForm, CustomUserChangeForm
+from .models import  Register, CustomUser, UserProfileHistory
 from django.contrib.auth import authenticate, login , logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
@@ -10,11 +11,15 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.contrib import messages
 from django.conf import settings
-from .models import  Register, CustomUser, UserProfileHistory
 import subprocess
 import requests
 import platform
 import random
+
+
+IDC = 'ML_Training/identify_cols.py'
+IBS = 'ML_Training/identify_badwords.py'
+IIS = 'ML_Training/identify_imgs.py'
 
 
 #Functions
@@ -49,7 +54,7 @@ def Logout_user(request):
     return redirect('index')
 
 
-'''Executa os arquivos de verificação de palavras'''
+'''Execute the verification of the words and images'''
 def Execute_verification(file_name1, file_name2, file_name3):
     if platform.system() == "Windows":
         # Se o sistema operacional for Windows
@@ -68,9 +73,6 @@ def Execute_verification(file_name1, file_name2, file_name3):
 '''Update the profile'''
 @login_required
 def Update_user(request):
-    file_name1 = 'ML_Training/identify_cols.py'
-    file_name2 = 'ML_Training/identify_badwords.py'
-    file_name3 = 'ML_Training/identify_imgs.py'
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -89,7 +91,7 @@ def Update_user(request):
                     image=old_user.image
                 )
 
-            Execute_verification(file_name1, file_name2, file_name3)
+            Execute_verification(IDC, IBS, IIS)
             return redirect('user_page')
     else:
         form = CustomUserChangeForm(instance=request.user)
@@ -102,8 +104,8 @@ def Search_images(request):
         query = request.GET.get('q')
         
         if query:
-            api_key = 'AIzaSyCq2VHeLaFt7BojWWYo97wHeanOLhCVOVc'
-            search_engine_id = '646f6762000414f9f'
+            api_key = ''
+            search_engine_id = ''
         
             url = f'https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&searchType=image&q={query}'
             
