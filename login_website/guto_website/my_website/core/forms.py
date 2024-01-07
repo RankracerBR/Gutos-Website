@@ -1,4 +1,4 @@
-'''Creation of the form to register the user'''
+#Libs/Modules
 from django.contrib.auth.forms import UserCreationForm
 from .models import Register, CustomUser
 from django import forms

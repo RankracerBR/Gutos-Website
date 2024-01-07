@@ -17,10 +17,6 @@ import platform
 import random
 
 
-IDC = 'ML_Training/identify_cols.py'
-IBS = 'ML_Training/identify_badwords.py'
-IIS = 'ML_Training/identify_imgs.py'
-
 
 #Functions
 '''Login page'''
@@ -91,7 +87,7 @@ def Update_user(request):
                     image=old_user.image
                 )
 
-            Execute_verification(IDC, IBS, IIS)
+            Execute_verification(settings.IDC, settings.IBS, settings.IIS)
             return redirect('user_page')
     else:
         form = CustomUserChangeForm(instance=request.user)
@@ -104,8 +100,8 @@ def Search_images(request):
         query = request.GET.get('q')
         
         if query:
-            api_key = ''
-            search_engine_id = ''
+            api_key = settings.API_KEY
+            search_engine_id = settings.SEARCH_ENGINE_ID
         
             url = f'https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&searchType=image&q={query}'
             
@@ -120,7 +116,7 @@ def Search_images(request):
             return render(request, 'user_page.html', {'results': data.get('items', []),
                                                       'name': request.session.get('name'),
                                                       'image': request.session.get('image'),
-                                                      'description': request.session.get('description')}) #Corrige o bug de sumir com a imagem do usuário
+                                                      'description': request.session.get('description')})
 
 
 '''Send the email of the form to the user'''

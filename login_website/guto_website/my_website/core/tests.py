@@ -1,6 +1,7 @@
+#Libs/Modules
+from .models import CustomUser, UserProfileHistory
 from unittest.mock import MagicMock
 from django.test import TestCase
-from .models import CustomUser, UserProfileHistory
 from core import views
 import unittest
 
@@ -70,5 +71,5 @@ class TestSearchImages(unittest.TestCase):
         result = views.Search_images(request)
         self.assertIsNone(result)
         
-##Depois fazer testes no front-end
+
 
