@@ -2,29 +2,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Gutos Website</title>
+    <title>
+        Gutos Website
+    </title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href={% static "css/style.css" %}>
-    <a class="register" href="{% url 'send_token' %}">Clique aqui para registrar sua conta</a>
+    <a class="register" href="{% url 'send_token' %}">
+        Clique aqui para registrar sua conta
+    </a>
 </head>
 
 <body>
     <center>
-    <h1>Página de Login</h1>
+    <h1>
+        Página de Login
+    </h1>
     <div id="form" >
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Login</button>
+            <button type="submit">
+                Login
+            </button>
         </form>
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {{ message }}
+                </li>
             {% endfor %}
         </ul>
         {% endif %}
     </center>
     </div>
 </body>
+
 </html>
