@@ -9,7 +9,7 @@ RUN python -m pip install --upgrade pip
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
 
-COPY . /code/
+COPY .env /code/.env
 
 # Comando para iniciar o servidor
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
