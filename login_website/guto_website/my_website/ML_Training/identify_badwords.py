@@ -3,13 +3,13 @@ from email.mime.text import MIMEText
 from django.conf import settings
 import pandas as pd
 import smtplib
-
+import os
 
 marked_phrases = ['Caralho', 'krl', 'Porra', 'BCT', 'Buceta', 'pqp', 'Cacete', 'putaquepariu', 'puta que pariu', 'porra', 'kct', 'meu pau']
 marked_phrases = [str(phrase) for phrase in marked_phrases]
 limite_palavras_ofensivas = 2
 
-# Função para identificar palavras ofensivas
+
 def Identify_marked_phrases(text):
     count = 0
     if isinstance(text, str):
@@ -18,8 +18,8 @@ def Identify_marked_phrases(text):
     return count
 
 def Send_email_warn(destinatario, assunto, mensagem):
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
+    smtp_server = settings.EMAIL_HOST
+    smtp_port = settings.EMAIL_PORT
     remetente = settings.EMAIL_HOST_USER
     senha = settings.EMAIL_HOST_PASSWORD
 
@@ -52,7 +52,12 @@ for index, row in df.iterrows():
         destinatario = row['email']
         assunto = "Aviso: Conteúdo ofensivo detectado"
         mensagem = f"Prezado usuário,\n\nDetectamos palavras ofensivas em seu texto. Por favor, reveja e edite o conteúdo.\n\nAtenciosamente,\nEquipe do Guto."
-        Send_email_warn(destinatario, assunto, mensagem) 
-
+        try:
+         Send_email_warn(destinatario, assunto, mensagem) 
+        except ModuleNotFoundError:
+            smtp_server = os.getenv('EMAIL_HOST')
+            smtp_port = os.getenv('EMAIL_PORT')
+            remetente = os.getenv('EMAIL_HOST_USER')
+            senha = os.getenv('EMAIL_HOST_PASSWORD')
 
 df.to_csv('ML_Training/Users_csv/dados_usuarios_com_palavras_alvo.csv', index=False)
