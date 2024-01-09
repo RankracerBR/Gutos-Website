@@ -16,6 +16,8 @@ services:
         python -m pip install matplotlib
         python -m pip install opencv-python
         python -m pip install django-simple-history
+        python -m pip install python-decouple
+        pip install django_ratelimit
         python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
