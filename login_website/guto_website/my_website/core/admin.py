@@ -2,11 +2,17 @@
 from .models import CustomUser, UserProfileHistory
 from django.http import HttpResponse
 from django.contrib import admin
+from dotenv import load_dotenv
+from django.conf import settings
+import boto3
 import csv
+import os
 
 
 # Register your models here.
 #Criar um action para mandar para o RDS da AWS
+
+load_dotenv()
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -49,6 +55,33 @@ class CustomUserAdmin(admin.ModelAdmin):
         
     export_to_csv.short_description = 'Exportar para CSV'
     actions = ['export_to_csv']
+
+
+    def export_to_dynamodb(self, request, queryset):
+        aws_access_key_id = settings.AWS_ACCESS_KEY_ID
+        aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY
+        aws_default_region = settings.AWS_DEFAULT_REGION
+
+        dynamodb = boto3.resource('dynamodb',
+                                aws_access_key_id=aws_access_key_id,
+                                aws_secret_access_key=aws_secret_access_key,
+                                region_name=aws_default_region)
+        table = dynamodb.Table('PlatformUsers')
+
+        for user in queryset:
+            table.put_item(
+                Item={
+                    'Partition1': user.username,
+                    'email': user.email,
+                    'status': user.status,
+                    'description': user.description
+                    # Adicione outros campos conforme necessário
+                }
+            )
+        self.message_user(request, "Os dados foram enviados para o DynamoDB com sucesso")
+
+    export_to_dynamodb.short_description = "Exportar para o DynamoDB"
+    actions = ['export_to_dynamodb']
 
 
 @admin.register(UserProfileHistory)
