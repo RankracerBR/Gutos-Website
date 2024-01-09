@@ -168,3 +168,10 @@ def Register_user(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'register_account.html', {'form': form})
+
+
+@login_required
+def Users(request):
+    usuarios = CustomUser.objects.all()
+
+    return render(request, 'show_users.html', {'usuarios': usuarios})
