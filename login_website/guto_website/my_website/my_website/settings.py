@@ -177,3 +177,9 @@ IIS = 'ML_Training/identify_imgs.py'
 #API google images
 API_KEY = config('API_KEY')
 SEARCH_ENGINE_ID = config('SEARCH_ENGINE_ID')
+
+
+#DynamoDB
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION')
