@@ -1,11 +1,25 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href={% static "css/style.css" %}>
+    <a class="voltar" href="{% url 'user_page' %}">Voltar</a>
     <title>Usuários</title>
 </head>
 <body>
-    
+    <ul class="usuarios-list">
+        {% for usuario in usuarios %}
+            <li class="usuario-item">
+                <p>{{ usuario.username }} - {{ usuario.email }} - {{ usuario.status }}</p>
+                {% if usuario.image %}
+                    <img class="usuario-image" src="{{ usuario.image.url }}" alt="{{ usuario.username }}"/>
+                {% else %}
+                    <p>Sem imagem</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
