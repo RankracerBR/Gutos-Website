@@ -1,11 +1,12 @@
 #Libs/Modules
 from .forms import RegisterForm, CustomUserCreationForm, CustomUserChangeForm
-from .models import  Register, CustomUser, UserProfileHistory
+from .models import  Register, CustomUser, UserProfileHistory, UserBan
 from django.contrib.auth import authenticate, login , logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from ML_Training import identify_words_content as idc
+from ML_Training import identify_badwords as idb
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.http import HttpResponse
@@ -27,19 +28,24 @@ def Login_user(request):
             email = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=email, password=password)
-
+    
             if user is not None:
                 login(request, user)
                 return redirect('user_page')
+
     else:
         form = AuthenticationForm()
     return render(request, 'index.html', {'form': form})
-
 
 '''User page'''
 @login_required
 def User_page(request):
     user = request.user
+    is_banned = UserBan.objects.filter(user=user).exists()
+    if is_banned:
+        messages.error(request, 'Você foi banido! Entre em contato com o suporte para mais informações.')
+        return redirect('index')
+
     return render(request, 'user_page.html', {'user':user})
 
 
@@ -71,26 +77,35 @@ def Execute_verification(file_name1, file_name2, file_name3):
 def Update_user(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
+
         if form.is_valid():
             old_user = CustomUser.objects.get(pk=request.user.pk)
             form.save()
+        if (
+            old_user.last_name != request.user.last_name or
+            old_user.description != request.user.description or
+            old_user.image != request.user.image
+        ):
+            UserProfileHistory.objects.create(
+                user=request.user,
+                last_name=old_user.last_name,
+                description=old_user.description,
+                image=old_user.image
+            )
 
-            if (
-                old_user.last_name != request.user.last_name or
-                old_user.description != request.user.description or
-                old_user.image != request.user.image
-            ):
-                UserProfileHistory.objects.create(
-                    user=request.user,
-                    last_name=old_user.last_name,
-                    description=old_user.description,
-                    image=old_user.image
-                )
+        Execute_verification(settings.IDC, settings.IBS, settings.IIS)
 
-            Execute_verification(settings.IDC, settings.IBS, settings.IIS)
-            return redirect('user_page')
+        is_user_banned = idb.run_code()
+
+        user_ban = UserBan.objects.filter(user=request.user).first()
+        if user_ban and user_ban.is_banned: 
+            return redirect('index')  
+
+        return redirect('user_page')
+
     else:
         form = CustomUserChangeForm(instance=request.user)
+
     return render(request, 'alter_user.html', {'form': form})
 
 
@@ -173,5 +188,4 @@ def Register_user(request):
 @login_required
 def Users(request):
     usuarios = CustomUser.objects.all()
-
     return render(request, 'show_users.html', {'usuarios': usuarios})

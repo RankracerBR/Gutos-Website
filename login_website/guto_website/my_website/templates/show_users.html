@@ -12,9 +12,10 @@
     <ul class="usuarios-list">
         {% for usuario in usuarios %}
             <li class="usuario-item">
-                <p>{{ usuario.username }} - {{ usuario.email }} - {{ usuario.status }}</p>
+                <p>- Nome: {{ usuario.username }}</p>
+                <p>- Descrição: {{ usuario.description }}</p>
                 {% if usuario.image %}
-                    <img class="usuario-image" src="{{ usuario.image.url }}" alt="{{ usuario.username }}"/>
+                    <p>- Foto: </p><img class="usuario-image" src="{{ usuario.image.url }}" alt="{{ usuario.username }}"/>
                 {% else %}
                     <p>Sem imagem</p>
                 {% endif %}

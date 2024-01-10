@@ -32,7 +32,7 @@ body{
     transform: scale(1.2);
 }
 
-a.register, a.sair, a.voltar, a.alterarperfil{
+a.register, a.sair, a.voltar, a.alterarperfil, a.mostrarusuarios{
     text-decoration: none;
     color: #000;
     transition: font-size 0.2s ease;
@@ -54,6 +54,24 @@ a.register, a.sair, a.voltar, a.alterarperfil{
     right: 10px;
 }
 
-a.register:hover, a.sair:hover, a.voltar:hover, a.alterarperfil:hover{
+.usuarios-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+}
+
+.usuario-item {
+    flex: 0 0 calc(25% - 20px); 
+    margin: 10px;
+    text-align: center;
+}
+
+.usuario-image {
+    max-width: 400px; 
+    height: auto;
+}
+
+a.register:hover, a.sair:hover, a.voltar:hover, a.alterarperfil:hover, a.mostrarusuarios:hover{
     font-size: 18px;
 }

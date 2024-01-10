@@ -24,7 +24,6 @@ class CustomUser(AbstractUser):
     description = models.TextField("Descrição", max_length=600, default='', blank=True)
     image = models.ImageField(upload_to='media/', null=True, blank=True)
 
-
     def __str__(self):
         return self.username
 
@@ -41,3 +40,13 @@ class UserProfileHistory(models.Model):
 
     def __str__(self):
         return f"History for {self.user.username} at {self.timestamp}"
+    
+
+class UserBan(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    is_banned = models.BooleanField(default=False)
+    ban_reason = models.TextField("Motivo do Banimento", max_length=500, 
+                                  blank=True)
+    
+    def __str__(self):
+        return f"{self.user.username} - Banido: {self.is_banned}"

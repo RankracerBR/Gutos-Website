@@ -144,7 +144,7 @@ image_paths = []
 
 # Percorre o diretório em busca de arquivos de imagem
 for filename in os.listdir(directory):
-    if filename.endswith('.webp') or filename.endswith('.png') or filename.endswith('.jpg'):
+    if filename.endswith('.webp') or filename.endswith('.png') or filename.endswith('.jpg') or filename.endswith('.jfif') or filename.endswith('.jpeg'):
         image_paths.append(os.path.join(directory, filename))
 
 # Loop sobre cada imagem encontrada

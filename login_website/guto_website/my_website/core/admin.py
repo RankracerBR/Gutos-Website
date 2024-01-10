@@ -1,8 +1,7 @@
 #Libs/Modules
-from .models import CustomUser, UserProfileHistory
+from .models import CustomUser, UserProfileHistory, UserBan
 from django.http import HttpResponse
 from django.contrib import admin
-from dotenv import load_dotenv
 from django.conf import settings
 import boto3
 import csv
@@ -10,9 +9,7 @@ import os
 
 
 # Register your models here.
-#Criar um action para mandar para o RDS da AWS
 
-load_dotenv()
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
@@ -75,7 +72,6 @@ class CustomUserAdmin(admin.ModelAdmin):
                     'email': user.email,
                     'status': user.status,
                     'description': user.description
-                    # Adicione outros campos conforme necessário
                 }
             )
         self.message_user(request, "Os dados foram enviados para o DynamoDB com sucesso")
@@ -113,3 +109,16 @@ class UserProfileHistoryAdmin(admin.ModelAdmin):
         
     export_to_csv.short_description = 'Exportar para CSV'
     actions = ['export_to_csv']
+
+
+@admin.register(UserBan)
+class UserBanAdmin(admin.ModelAdmin):
+    list_display = ('user', 'is_banned', 'ban_reason')
+    list_filter = ('is_banned',)
+    search_fields = ('user__username', 'ban_reason')
+
+    def user_username(self, obj):
+        return obj.user.username if obj.user else None
+    user_username.short_description = 'Username'
+    user_username.admin_order_field = 'user__username'
+    

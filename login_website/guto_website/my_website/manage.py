@@ -15,6 +15,11 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    core_dir = os.path.abspath(os.path.join(current_dir, 'my_website', 'core'))
+    sys.path.append(core_dir)
+
     execute_from_command_line(sys.argv)
 
 

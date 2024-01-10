@@ -27,12 +27,15 @@
 <body>
     <center>
         <h1>
-            Bem-vindo {{ user.username }}
+            Bem-vind@ {{ user.username }}
         </h1>
         <img src="{{ user.image.url }}" alt="Imagem do usuário" width="200px" height="200px">
-        <p id="descricao">
+        <h3 id="descricao">
+            -Sua Descrição:
+        </h3>
+        <h4>
             {{ user.description }}
-        </p>
+        </h4>
     </center>
     <br>
     </br>
